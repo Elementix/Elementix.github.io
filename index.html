@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+
+    
+    
+    
+      <meta name="Description" content="Get Download Links for Video, Audio, Ebook, Softwares and Pictures. SCRPED makes it easy to find Open Directories by using Google Advance Search.">
+      <meta name="Keywords" content="scrped,find,downloader,finder,download,video,music,pictures,pics,images,movies,film,songs,softwares, tutorials,pdf,ebook,compressed,zip,collection,textbook,open,directory,free,Download ">
+
+
+    <title>SCRPED</title>
+    
+   
+    <link href="http://localhost/css/bootstrap.min.css" rel="stylesheet">
+   
+  </head>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+
+  <div>
+  <div class="row" align="center">
+  <div class=" col-lg-2 col-md-2"></div>
+  <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+    
+    <div class="input-group input-group-lg">
+      <div class="input-group-btn">
+        <button id="btndd" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Video <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a tabindex="-1" href="#"><span class="glyphicon glyphicon-film" style="float:left" aria-hidden="true"></span>&nbsp;&nbsp;Video</a></li>
+          <li><a tabindex="-1" href="#"><span class="glyphicon glyphicon-music" style="float:left" aria-hidden="true"></span>&nbsp;&nbsp;Audio</a></li>
+          <li><a tabindex="-1" href="#"><span class="glyphicon glyphicon-book" style="float:left" aria-hidden="true"></span>&nbsp;&nbsp;eBook</a></li>
+          <li><a tabindex="-1" href="#"><span class="glyphicon glyphicon-picture" style="float:left" aria-hidden="true"></span>&nbsp;&nbsp;Pictures</a></li>
+          <li><a tabindex="-1" href="#"><span class="glyphicon glyphicon-cd " style="float:left" aria-hidden="true"></span>&nbsp;&nbsp;Software/Games</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a tabindex="-1" href="#"><span class="glyphicon glyphicon-tasks" style="float:left" aria-hidden="true"></span>
+&nbsp;&nbsp;Compressed</a></li>
+        </ul>
+      </div>
+      
+      <input id="input" type="text" class="form-control" placeholder="Use COMMA to enter multiple queries at once" autofocus>
+
+      <span class="input-group-btn">
+        <button id="go" class="btn btn-default" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+      </span>
+
+    </div>    
+    </div>
+      <div class="col-md-2 col-lg-2"></div>
+
+   </div>
+   </div>
+
+
+   <div id="d"></div>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript">
+ $(function(){
+
+      $(".dropdown-menu li a").click(function(){
+      $("#btndd:first-child").text($(this).text());
+      $("#btndd:first-child").append(" <span class=caret></span>");
+      $("#btndd:first-child").val($(this).text());
+ });
+});
+
+$(document).ready(function(){
+$('body').keypress(function(e){
+              if(e.which==13){
+                $('#go').trigger('click');
+              }
+            });
+});           
+
+
+
+$(document).ready(function(){
+  $('#input').val("");
+  $('#input').focus();
+  $('#go').click(function(){
+    var type=$('#btndd ').val();
+    var query=$('#input').val();
+    var arr=new Array();
+    var commonToAll=" -inurl:(jsp|pl|php|html|aspx|htm|cf|shtml) -inurl:(index_of|listen77|mp3raid|mp3toss|mp3drug|index_of|wallywashis) intitle:\"index.of./\" ";
+    if(query[query.length-1]==','){
+      query=query.slice(0,-1)
+    }
+    arr=query.split(',');
+    arr.push(',');
+    switch(type){
+      case("Video"):{
+        var extensions=" (avi|mkv|mov|mp4|mpg|wmv)";
+        break;
+      }
+      case("Audio"):{
+        var extensions=" (ac3|flac|m4a|mp3|ogg|wav|wma) ";
+        break;
+      }
+      case("Ebook"):{
+        var extensions=" (CBZ|CBR|CHM|DOC|DOCX|EPUB|MOBI|ODT|PDF|RTF|txt)";
+        break;
+      }
+      case("Pictures"):{
+        var extensions=" (bmp|gif|jpg|png|psd|tif|tiff) ";
+        break;
+      }
+      case("Software/Games"):{
+        var extensions=" (apk|exe|iso|rar|tar|zip) ";
+        break;
+      }
+      case("Compressed"):{
+        var extensions=" (7z|bz2|gz|iso|rar|zip) ";
+        break;
+      }
+      default:{
+        var extensions=" (avi|mkv|mov|mp4|mpg|wmv)";
+        break;
+      }
+    }
+    for (var i =0 ; i <arr.length - 1; i++) {
+      if(arr[i]!=""){
+        var temp=arr[i];
+        var last;
+        temp=temp.replace(/[^\w\s]/gi, '');
+        if(temp!=0){
+          last=temp.replace(/ /g,".");
+        }
+        var goodinput="intext:\""+last+"\"";
+        var finalquery=goodinput+extensions+commonToAll;
+
+        var url="https://www.google.com/search?q="+encodeURIComponent(finalquery);
+        //alert(goodinput);
+        window.open(url,'_blank');
+      }
+
+    }
+});
+});
+
+</script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-83005239-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script src="http://localhost/js/bootstrap.min.js"></script>
+  </body>
+</html>
