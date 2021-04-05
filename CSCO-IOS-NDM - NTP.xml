@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PolicyReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ID>e34f0b25-9655-48b6-a6e8-e7d711c938e7</ID>
+  <Name>CSCO-IOS-NDM - NTP</Name>
+  <Comments>Cisco IOS Router NDM Security Technical Implementation Guide: Version: 1: Release: 2:  24 Jan 2020</Comments>
+  <Group>Cisco-IOS-NDM-V1R1</Group>
+  <ShowSummaryFlag>false</ShowSummaryFlag>
+  <ShowRulesWithoutViolationFlag>true</ShowRulesWithoutViolationFlag>
+  <AssignedPolicies>
+    <Policy>
+      <NodeSelectionString>WebCriteria:&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfWebSelectionCriteria xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;WebSelectionCriteria&gt;
+    &lt;Id&gt;bb10ada7-c14f-48ea-81a3-b6015bb6ab86&lt;/Id&gt;
+    &lt;LogicalCondition /&gt;
+    &lt;SelectedColumn&gt;Vendor&lt;/SelectedColumn&gt;
+    &lt;MatchType&gt;=&lt;/MatchType&gt;
+    &lt;SelectedValue&gt;Cisco&lt;/SelectedValue&gt;
+  &lt;/WebSelectionCriteria&gt;
+&lt;/ArrayOfWebSelectionCriteria&gt;SQL:Where (Vendor = 'Cisco') </NodeSelectionString>
+      <ConfigTypes>Running</ConfigTypes>
+      <AssignedPolicyRules>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>609ebf41-f08f-411d-a87f-0a49a00744e0</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001050 - NTP</RuleName>
+          <Comments>The Cisco router must be configured to record time stamps for log records that can be mapped to Coordinated Universal Time (UTC) or Greenwich Mean Time (GMT).</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+service timestamps log datetime localtime
+!
+hostname R2
+…
+…
+…
+clock timezone EST -5
+
+Note: UTC is the default; hence, the command set time-zone may not be seen in the configuration.
+This can be verified using the show system uptime command.
+
+If the router is not configured to record time stamps for audit records that can be mapped to UTC GMT, this is a finding.
+
+Fix Text: Configure the Cisco router to record time stamps for audit records that can be mapped to UTC or GMT as shown in the example below.
+
+R2(config)#clock timezone EST -5
+R2(config)#service timestamps log datetime localtime  
+
+CCI: CCI-001890
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>clock timezone EST -5</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>277a17ec-94e1-490a-ac61-79c4dbc444ca</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000280 - NTP</RuleName>
+          <Comments>The Cisco router must produce audit records containing information to establish when (date and time) the events occurred.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Verify that the router is configured to include the date and time on all log records as shown in the configuration example below.
+
+service timestamps log datetime localtime
+
+If time stamps is not configured, this is a finding.
+
+Fix Text: Configure the router to include the date and time on all log records as shown in the example below.
+
+R1(config)#service timestamps log datetime localtime  
+
+CCI: CCI-000131
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>service timestamps log datetime localtime</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ntp server x.x.x.x</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ntp server y.y.y.y</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>9c37877a-6776-4f5b-9c5f-a4aa2d1774fc</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001030 - NTP</RuleName>
+          <Comments>The Cisco router must be configured to synchronize its clock with the primary and secondary time sources using redundant authoritative time sources.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the configuration example below.
+
+ntp server x.x.x.x
+ntp server y.y.y.y
+
+If the Cisco router is not configured to synchronize its clock with redundant authoritative time sources, this is a finding.
+
+Fix Text: Configure the Cisco router to synchronize its clock with redundant authoritative time sources as shown in the example below.
+
+R2(config)#ntp server x.x.x.x
+R2(config)#ntp server y.y.y.y  
+
+CCI: CCI-000366
+
+
+CCI: CCI-001893
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>d79e4741-255f-4594-bc0e-ca1a237addfe</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001040 - NTP</RuleName>
+          <Comments>The Cisco router must record time stamps for audit records that meet a granularity of one second for a minimum degree of precision.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+service timestamps log datetime 
+
+If the router is not configured to record time stamps that meet a granularity of one second, this is a finding.
+
+Fix Text: Configure the Cisco router to record time stamps that meet a granularity of one second as shown in the example below.
+
+R2(config)#service timestamps log datetime localtime  
+
+CCI: CCI-001889
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>service timestamps log datetime </SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ntp authentication-key 1 md5</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ntp authenticate</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ntp trusted-key 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ntp server x.x.x.x key 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ntp server y.y.y.y key 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>174bbe5f-cc22-49f0-9348-f864d28d97d9</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001150 - NTP</RuleName>
+          <Comments>The Cisco router must be configured to authenticate Network Time Protocol (NTP) sources using authentication that is cryptographically based.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the configuration example below.
+
+ntp authentication-key 1 md5 121B0A151012 7
+ntp authenticate
+ntp trusted-key 1
+ntp server x.x.x.x key 1
+ntp server y.y.y.y key 1
+
+If the Cisco router is not configured to authenticate NTP sources using authentication that is cryptographically based, this is a finding.
+
+Fix Text: Configure the Cisco router to authenticate NTP sources using authentication that is cryptographically based as shown in the example below.
+
+R2(config)#ntp authenticate
+R2(config)#ntp authentication-key 1 md5 xxxxxx
+R2(config)#ntp trusted-key 1
+R2(config)#ntp server x.x.x.x key 1
+R2(config)#ntp server y.y.y.y key 1  
+
+CCI: CCI-001967
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+      </AssignedPolicyRules>
+      <Grouping>CSCO-IOS-NDM</Grouping>
+      <Comments />
+      <PolicyName>CSCO-IOS-NDM - NTP</PolicyName>
+    </Policy>
+  </AssignedPolicies>
+  <ReportStatus>Enabled</ReportStatus>
+</PolicyReport>

@@ -1,0 +1,951 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PolicyReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ID>55426117-dc13-403d-8f8e-9a426ece2b34</ID>
+  <Name>CSCO-IOS-NDM - Account Access</Name>
+  <Comments>Cisco IOS Router NDM Security Technical Implementation Guide: Version: 1: Release: 2:  24 Jan 2020</Comments>
+  <Group>Cisco-IOS-NDM-V1R1</Group>
+  <ShowSummaryFlag>false</ShowSummaryFlag>
+  <ShowRulesWithoutViolationFlag>true</ShowRulesWithoutViolationFlag>
+  <AssignedPolicies>
+    <Policy>
+      <NodeSelectionString>WebCriteria:&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfWebSelectionCriteria xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;WebSelectionCriteria&gt;
+    &lt;Id&gt;e18ca5d1-45d8-448b-a395-b96d5479f833&lt;/Id&gt;
+    &lt;LogicalCondition /&gt;
+    &lt;SelectedColumn&gt;Vendor&lt;/SelectedColumn&gt;
+    &lt;MatchType&gt;=&lt;/MatchType&gt;
+    &lt;SelectedValue&gt;Cisco&lt;/SelectedValue&gt;
+  &lt;/WebSelectionCriteria&gt;
+&lt;/ArrayOfWebSelectionCriteria&gt;SQL:Where (Vendor = 'Cisco') </NodeSelectionString>
+      <ConfigTypes>Running</ConfigTypes>
+      <AssignedPolicyRules>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa common-criteria policy PASSWORD_POLICY</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>special-case 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>032fd776-de60-4f00-9e51-03aef70cad5f</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000600 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured to enforce password complexity by requiring that at least one special character be used.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+aaa new-model
+!
+!
+aaa common-criteria policy PASSWORD_POLICY
+ special-case 1
+
+If the Cisco router is not configured to enforce password complexity by requiring that at least one special character be used, this is a finding.
+
+Fix Text: Configure the Cisco router to enforce password complexity by requiring that at least one special character be used as shown in the example below.
+
+R1(config)#aaa common-criteria policy PASSWORD_POLICY
+R1(config-cc-policy)#special-case 1
+R1(config-cc-policy)#exit  
+
+CCI: CCI-001619
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>login on-failure log</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>login on-success log</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>8638128e-625d-4790-8d1e-05d9dfb2a302</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000250 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured to generate audit records when successful/unsuccessful attempts to log on with access privileges occur.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement. The configuration example below will log all logon attempts.
+
+login on-failure log
+login on-success log
+
+If the Cisco router is not configured to generate audit records when successful/unsuccessful attempts to logon, this is a finding.
+
+Fix Text: Configure the Cisco router to log all logon attempts as shown in the example below.
+
+R1(config)#login on-failure log
+R1(config)#login on-success log
+R1(config)#end  
+
+CCI: CCI-000172
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>exec-timeout 10 0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>login authentication LOGIN_AUTHENTICATION</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>b7d96e7b-ad4a-4ab2-9a23-1c1253d8f816</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000950 - Account Access</RuleName>
+          <Comments>The Cisco router must automatically lock the account until the locked account is released by an administrator when three unsuccessful logon attempts in 15 minutes are exceeded.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-002238
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart>vty 0 4</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa common-criteria policy PASSWORD_POLICY</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>numeric-count 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>a9bd4f9d-b05b-4e49-ab49-3774f39770d3</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000590 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured to enforce password complexity by requiring that at least one numeric character be used.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+aaa new-model
+!
+!
+aaa common-criteria policy PASSWORD_POLICY
+ numeric-count 1
+
+If the Cisco router is not configured to enforce password complexity by requiring that at least one numeric character be used, this is a finding.
+
+Fix Text: Configure the Cisco router to enforce password complexity by requiring that at least one numeric character be used as shown in the example below.
+
+R1(config)#aaa common-criteria policy PASSWORD_POLICY
+R1(config-cc-policy)#numeric-count 1
+R1(config-cc-policy)#exit  
+
+CCI: CCI-000194
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa common-criteria policy PASSWORD_POLICY</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>char-changes 8</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>7917c2ac-84db-48cf-9fb2-387ac030049f</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000610 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured to require that when a password is changed, the characters are changed in at least eight of the positions within the password.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+aaa new-model
+!
+!
+aaa common-criteria policy PASSWORD_POLICY
+ char-changes 8
+
+If the Cisco router is not configured to require that when a password is changed, the characters are changed in at least eight of the positions within the password, this is a finding.
+
+Fix Text: Configure the Cisco router to enforce password complexity by requiring that when a password is changed, the characters are changed in at least eight of the positions within the password as shown in the example below.
+
+R1(config)#aaa common-criteria policy PASSWORD_POLICY
+R1(config-cc-policy)#char-changes 8
+R1(config-cc-policy)#exit  
+
+CCI: CCI-000195
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa common-criteria policy PASSWORD_POLICY</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>min-length 15</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>1b2e93bf-d52b-4ce6-b906-4674901328e8</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000550 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured to enforce a minimum 15-character password length.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+aaa new-model
+!
+!
+aaa common-criteria policy PASSWORD_POLICY
+ min-length 15
+
+If the Cisco router is not configured to enforce a minimum 15-character password length, this is a finding.
+
+Fix Text: Configure the Cisco router to enforce a minimum 15-character password length as shown in the example below.
+
+R1(config)#aaa common-criteria policy PASSWORD_POLICY
+R1(config-cc-policy)#min-length 15
+R1(config-cc-policy)#exit  
+
+CCI: CCI-000205
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>username xxxxxxxxx privilege nn secret xxxxxxx
+</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>aaa authentication login default group tacacs+ local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>244a45f8-2b85-41d5-b30e-4a65cb2804d8</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000490 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured with only one local account to be used as the account of last resort in the event the authentication server is unavailable.
+</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Step 1: Review the Cisco router configuration to verify that a local account for last resort has been configured.
+
+username xxxxxxxxx privilege nn secret xxxxxxx
+
+Step 2: Verify that local is defined after radius or tacas+ in the authentication order as shown in the example below.
+
+aaa authentication login default group tacacs+ local
+
+If the Cisco router is not configured with only one local account to be used as the account of last resort in the event the authentication server is unavailable, this is a finding.
+
+Fix Text: Step 1: Configure a local account as shown in the example below.
+
+R2(config)#username xxxxxxxxx privilege nn secret xxxxxxx
+
+Step 2: Configure the authentication order to use the local account if the authentication server is not reachable as shown in the following example:
+
+R2(config)#aaa authentication login default group tacacs+ local  
+
+CCI: CCI-001358
+
+
+CCI: CCI-002111
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>username xxxxxxxxx privilege nn secret xxxxxxx</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>exec-timeout 10 0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>login authentication LOGIN_AUTHENTICATION</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>1599b5b0-b83f-4cd2-aa4e-5573b93473e7</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000650 - Account Access</RuleName>
+          <Comments>The Cisco router must enforce a 60-day maximum password lifetime restriction.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000199
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa common-criteria policy PASSWORD_POLICY</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>lower-case 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>446b0090-9634-4eb6-9d9c-5b9d501c8ae8</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000580 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured to enforce password complexity by requiring that at least one lower-case character be used.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+aaa new-model
+!
+!
+aaa common-criteria policy PASSWORD_POLICY
+lower-case 1
+
+If the Cisco router is not configured to enforce password complexity by requiring that at least one lower-case character be used, this is a finding.
+
+Fix Text: Configure the Cisco router to enforce password complexity by requiring that at least one lower-case character be used as shown in the example below.
+
+R1(config)#aaa common-criteria policy PASSWORD_POLICY
+R1(config-cc-policy)#lower-case 1
+R1(config-cc-policy)#exit  
+
+CCI: CCI-000193
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip http authentication aaa login-authentication LOGIN_AUTHENTICATION</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>afb98b85-679a-45e7-8650-997b3c72f5c7</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000060 - Account Access</RuleName>
+          <Comments>The network element must provide automated support for account management functions.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000015
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart>^line vty (0 4|5 15)</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Regex</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>crypto pki trustpoint CA_X
+ </Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>enrollment url http://trustpoint1.example.com</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>38b027ed-8114-4f8d-ab8a-b536cc5b4569</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001440 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured to obtain its public key certificates from an appropriate certificate policy through an approved service provider.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if a CA trust point has been configured. The CA trust point will contain the URL of the CA in which the router has enrolled with. Verify this is a DoD or DoD-approved CA. This will ensure the router has enrolled and received a certificate from a trusted CA. The CA trust point configuration would look similar to the example below.
+
+crypto pki trustpoint CA_X
+ enrollment url http://trustpoint1.example.com
+
+Note: A remote end-point's certificate will always be validated by the router by verifying the signature of the CA on the certificate using the CA's public key, which is contained in the router's certificate it received at enrollment.
+
+Note: This requirement is not applicable if the router does not have any public key certificates.
+
+If the Cisco router is not configured to obtain its public key certificates from an appropriate certificate policy through an approved service provider, this is a finding.
+
+Fix Text: Configure the router to obtain its public key certificates from an appropriate certificate policy through an approved service provider as shown in the example below.
+
+R2(config)# crypto pki trustpoint CA_X
+R2(ca-trustpoint)#enrollment url http://trustpoint1.example.com
+  
+
+CCI: CCI-000366
+
+
+CCI: CCI-001159</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>b362c175-39dc-47fa-8959-c55dbc8ead67</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000460 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured to limit privileges to change the software resident within software libraries.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Verify that the router is not configured with a privilege level other than "15" to allow access to the file system as shown in the example below.
+
+file privilege 10 
+
+Note: The default privilege level required for access to the file system is "15"; hence, the command file privilege "15" will not be shown in the configuration.
+
+If the router is configured with a privilege level other than "15" to allow access to the file system, this is a finding.
+
+Fix Text: Configure the router to only allow administrators with privilege level "15" access to the file system as shown in the example below.
+
+R4(config)#file privilege 15  
+
+CCI: CCI-001499
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>file privilege 10</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>04a87270-8485-41d3-9cce-c7f425618789</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000390 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured to protect audit information from unauthorized deletion.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement.
+
+Step 1: If persistent logging is enabled as shown in the example below, go to step 2. Otherwise, this requirement is not applicable.
+
+logging persistent url disk0:/logfile size 134217728 filesize 16384
+
+Step 2: Verify that the router is not configured with a privilege level other than "15" to allow access to the file system as shown in the example below.
+
+file privilege 10 
+
+Note: The default privilege level required for access to the file system is "15"; hence, the command file privilege "15" will not be shown in the configuration.
+
+If the router is configured with a privilege level other than "15" to allow access to the file system, this is a finding.
+
+Fix Text: If persistent logging is enabled, configure the router to only allow administrators with privilege level "15" access to the file system as shown in the example below.
+
+R4(config)#file privilege 15  
+
+CCI: CCI-000164
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>file privilege 10 </SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa common-criteria policy PASSWORD_POLICY</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>upper-case 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>225c0e68-6fe5-4afc-bf13-caa88ba58bbb</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000570 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured to enforce password complexity by requiring that at least one upper-case character be used.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+aaa new-model
+!
+!
+aaa common-criteria policy PASSWORD_POLICY
+ upper-case 1
+
+If the Cisco router is not configured to enforce password complexity by requiring that at least one upper-case character be used, this is a finding.
+
+Fix Text: Configure the Cisco router to enforce password complexity by requiring that at least one upper-case character be used as shown in the example below.
+
+R1(config)#aaa common-criteria policy PASSWORD_POLICY
+R1(config-cc-policy)#upper-case 1
+R1(config-cc-policy)#exit  
+
+CCI: CCI-000192
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>526fa3b1-12c6-4e9b-816e-db11c0f4d98b</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000150 - Account Access</RuleName>
+          <Comments>The Cisco router must be configured to enforce the limit of three consecutive invalid logon attempts, after which time it must lock out the user account from accessing the device for 15 minutes.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it enforces the limit of three consecutive invalid logon attempts as shown in the example below.
+
+login block-for 900 attempts 3 within 120
+
+Note: The configuration example above will block any login attempt for 15 minutes after three consecutive invalid logon attempts within a two-minute period.
+
+If the Cisco router is not configured to enforce the limit of three consecutive invalid logon attempts, this is a finding.
+
+Fix Text: Configure the Cisco router to enforce the limit of three consecutive invalid logon attempts as shown in the example below.
+
+R2(config)#login block-for 900 attempts 3 within 120  
+
+CCI: CCI-000044
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>login block-for 900 attempts 3 within 120</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+      </AssignedPolicyRules>
+      <Grouping>CSCO-IOS-NDM</Grouping>
+      <Comments />
+      <PolicyName>CSCO-IOS-NDM - Account Access</PolicyName>
+    </Policy>
+  </AssignedPolicies>
+  <ReportStatus>Enabled</ReportStatus>
+</PolicyReport>

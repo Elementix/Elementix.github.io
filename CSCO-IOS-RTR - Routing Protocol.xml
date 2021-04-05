@@ -1,0 +1,2554 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PolicyReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ID>aa26230a-764c-47ac-9707-44208e12c34a</ID>
+  <Name>CSCO-IOS-RTR - Routing Protocol</Name>
+  <Comments>Cisco IOS Router RTR Security Technical Implementation Guide: Version: 1: Release: 2: 24 JAN 2020</Comments>
+  <Group>Cisco-IOS-RTR-V1R1</Group>
+  <ShowSummaryFlag>false</ShowSummaryFlag>
+  <ShowRulesWithoutViolationFlag>true</ShowRulesWithoutViolationFlag>
+  <AssignedPolicies>
+    <Policy>
+      <NodeSelectionString>WebCriteria:&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfWebSelectionCriteria xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;WebSelectionCriteria&gt;
+    &lt;Id&gt;023f7a8b-cc52-4546-8218-dd4c4774cc9d&lt;/Id&gt;
+    &lt;LogicalCondition /&gt;
+    &lt;SelectedColumn&gt;Vendor&lt;/SelectedColumn&gt;
+    &lt;MatchType&gt;=&lt;/MatchType&gt;
+    &lt;SelectedValue&gt;Cisco&lt;/SelectedValue&gt;
+  &lt;/WebSelectionCriteria&gt;
+&lt;/ArrayOfWebSelectionCriteria&gt;SQL:Where (Vendor = 'Cisco') </NodeSelectionString>
+      <ConfigTypes>Running</ConfigTypes>
+      <AssignedPolicyRules>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>a8c65db8-3423-4b34-b828-038b59c2c5b4</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000300 - Routing Protocol</RuleName>
+          <Comments>The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Step 1: Review the IGP and BGP configurations. If there are redistribute static statements configured as shown in examples below proceed to step 2.
+
+OSPF Example
+
+router ospf 1
+ log-adjacency-changes
+ redistribute static subnets
+ network 0.0.0.0 255.255.255.255 area 0
+
+EIGRP example
+
+router eigrp 1
+ network 10.1.15.0 0.0.0.255
+ redistribute static
+
+RIP example
+
+router rip
+ version 2
+ redistribute static
+ network 10.0.0.0
+
+BGP example
+
+router bgp nn
+ no synchronization
+ bgp log-neighbor-changes
+ redistribute static
+ neighbor x.11.1.7 remote-as nn
+ neighbor x.11.1.7 password xxxxxxx
+ no auto-summary
+
+Step 2: Review the static routes that have been configured to determine if any contain the next hop address of the alternate gateway.
+
+If the static routes to the alternate gateway are being redistributed into BGP or any IGP peering to a NIPRNet gateway or any other autonomous system, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone.
+
+Configure the router so that static routes are not redistributed to an alternate gateway into either a BGP or any IGP peering with the NIPRNet or to any other autonomous systems. This can be done by excluding that route in the route-map as shown in the example below.
+
+Step 1: Configure a prefix list for any static routes with the alternate gateway as the next-hop address
+
+R5(config)#ip prefix-list ISP_PREFIX permit x.x.x.0/24
+
+Step 2: Configure a route map that will deny the state routes to the ISP
+
+R5(config)#route-map FILTER_ISP_STATIC deny 10
+R5(config-route-map)#match ip address prefix-list ISP_PREFIX
+R5(config-route-map)#exit
+R5(config)#route-map FILTER_ISP_STATIC permit 20
+R5(config-route-map)#exit
+
+Step 3: Apply the route-map to the IGP and BGP redistribute static commands as shown in the EIGRP example.
+
+R5(config)#router eigrp 1
+R5(config-router)#redistribute static route-map FILTER_ISP_STATIC  
+
+CCI: CCI-001414
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText>redistribute static route-map FILTER_ISP_STATIC</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>neighbor x.1.4.12 remote-as yy
+</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.1.4.12 filter-list 10 in</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>15a97eee-052f-4bb1-b89f-0b440ff7f498</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000550 - Routing Protocol</RuleName>
+          <Comments>The Cisco BGP router must be configured to reject route advertisements from CE routers with an originating AS in the AS_PATH attribute that does not belong to that customer.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Review the router configuration to verify the router is configured to deny updates received from CE routers with an originating AS in the AS_PATH attribute that does not belong to that customer.
+
+Step 1: Review router configuration and verify that there is an as-path access-list statement defined to only accept routes from a CE router whose AS did not originate the route. The configuration should look similar to the following:
+
+ip as-path access-list 10 permit ^yy$
+ip as-path access-list 10 deny .*
+
+Note: the characters “^” and “$” representing the beginning and the end of the expression respectively are optional and are implicitly defined if omitted.
+
+Step 2: Verify that the as-path access-list is referenced by the filter-list inbound for the appropriate BGP neighbors as shown in the example below:
+
+router bgp xx
+neighbor x.1.4.12 remote-as yy
+neighbor x.1.4.12 filter-list 10 in
+
+If the router is not configured to reject updates from CE routers with an originating AS in the AS_PATH attribute that does not belong to that customer, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone.
+
+Configure the router to reject updates from CE routers with an originating AS in the AS_PATH attribute that does not belong to that customer.
+
+Step 1: Configure the as-path ACL as shown in the example below:
+
+R1(config)#ip as-path access-list 10 permit ^yy$
+R1(config)#ip as-path access-list 10 deny .*
+
+Step 2: Apply the as-path filter inbound as shown in the example below:
+
+R1(config)#router bgp xx
+R1(config-router)#neighbor x.1.4.12 filter-list 10 in  
+
+CCI: CCI-000032
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart>router bgp xx</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>no synchronization</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>no bgp enforce-first-as</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>823ea43d-3f08-473c-9817-0f09c40a2fa9</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000540 - Routing Protocol</RuleName>
+          <Comments>The Cisco BGP router must be configured to reject route advertisements from BGP peers that do not list their autonomous system (AS) number as the first AS in the AS_PATH attribute.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to verify the router is configured to deny updates received from eBGP peers that do not list their AS number as the first AS in the AS_PATH attribute.
+
+By default Cisco IOS enforces the first AS in the AS_PATH attribute for all route advertisements. Review the router configuration to verify that the command no bgp enforce-first-as is not configured.
+
+router bgp xx
+ no synchronization
+ no bgp enforce-first-as
+
+If the router is not configured to reject updates from peers that do not list their AS number as the first AS in the AS_PATH attribute, this is a finding.
+
+Fix Text: Configure the router to deny updates received from eBGP peers that do not list their AS number as the first AS in the AS_PATH attribute.
+
+R1(config)#router bgp xx
+R1(config-router)#bgp enforce-first-as  
+
+CCI: CCI-000032
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart>router bgp xx</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>neighbor x.1.1.9 remote-as yy</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.1.1.9 maximum-prefix nnnnnnn</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.2.1.7 remote-as zz</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.2.1.7 maximum-prefix nnnnnnn</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>924913a8-6960-4ee7-a5c6-11845b832233</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000560 - Routing Protocol</RuleName>
+          <Comments>The Cisco BGP router must be configured to use the maximum prefixes feature to protect against route table flooding and prefix de-aggregation attacks.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to verify that the number of received prefixes from each eBGP neighbor is controlled.
+
+router bgp xx
+neighbor x.1.1.9 remote-as yy
+neighbor x.1.1.9 maximum-prefix nnnnnnn
+neighbor x.2.1.7 remote-as zz
+ neighbor x.2.1.7 maximum-prefix nnnnnnn
+
+If the router is not configured to control the number of prefixes received from each peer to protect against route table flooding and prefix de-aggregation attacks, this is a finding.
+
+Fix Text: Configure the router to use the maximum prefixes feature to protect against route table flooding and prefix de-aggregation attacks as shown in the example below.
+
+R1(config)#router bgp xx
+R1(config-router)#neighbor x.1.1.9 maximum-prefix nnnnnnn
+R1(config-router)#neighbor x.2.1.7 maximum-prefix nnnnnnn  
+
+CCI: CCI-002385
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart>router bgp xx</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>no synchronization</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>bgp log-neighbor-changes</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.11.1.7 remote-as nn</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.11.1.7 password xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>no auto-summary</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>c32ba855-db28-4458-b9ac-11d42259d883</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000290 - Routing Protocol</RuleName>
+          <Comments>The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Review the router configuration and verify that it is not BGP peering with an alternate gateway service provider.
+
+Step 1: Determine the ip address of the ISP router 
+
+interface GigabitEthernet0/2
+ description Link to ISP
+ ip address x.22.1.15 255.255.255.240
+
+Step 2: Verify that the router is not BGP peering with this router.
+
+router bgp nn
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor x.11.1.7 remote-as nn
+ neighbor x.11.1.7 password xxxxxxx
+ no auto-summary
+
+In the example above, the router is not peering with the ISP.
+
+If the router is BGP peering with an alternate gateway service provider, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone.
+
+Remove any BGP neighbors belonging to the alternate gateway service provider and configure a static route to forward Internet bound traffic to the alternate gateway as shown in the example below.
+
+R5(config)#ip route 0.0.0.0 0.0.0.0 x.22.1.14  
+
+CCI: CCI-001414
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart>router bgp nn</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>2</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>key chain OSPF_KEY_CHAIN</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>key 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>key-string xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>cryptographic-algorithm hmac-sha-256</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>key 2</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>key-string yyyyyyy</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>cryptographic-algorithm hmac-sha-256</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>2d312896-f11d-43eb-adbc-1785f64be94d</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000050 - Routing Protocol</RuleName>
+          <Comments>The Cisco router must be configured to authenticate all routing protocol messages using NIST-validated FIPS 198-1 message authentication code algorithm.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to verify it is using a NIST-validated FIPS 198-1 message authentication code algorithm to authenticate routing protocol messages.
+
+OSPF Example
+
+key chain OSPF_KEY_CHAIN
+ key 1
+ key-string xxxxxxx
+ send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018
+ accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018
+ cryptographic-algorithm hmac-sha-256
+ key 2
+ key-string yyyyyyy
+ send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018
+ accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018
+ cryptographic-algorithm hmac-sha-256
+…
+…
+…
+interface GigabitEthernet0/1
+ ip address x.x.x.x 255.255.255.0
+ ip ospf authentication key-chain OSPF_KEY_CHAIN
+
+If a NIST-validated FIPS 198-1 message authentication code algorithm is not being used to authenticate routing protocol messages, this is a finding.
+
+Fix Text: Configure routing protocol authentication to use a NIST-validated FIPS 198-1 message authentication code algorithm as shown in the example.
+
+R5(config)#key chain OSPF_KEY_CHAIN
+R5(config-keychain)#key 1
+R5(config-keychain-key)#key-string xxxxxx
+R5(config-keychain-key)#send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018
+R5(config-keychain-key)#accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018
+R5(config-keychain-key)#cryptographic-algorithm hmac-sha-256
+R5(config-keychain-key)#exit
+R5(config-keychain)#key 2
+R5(config-keychain-key)#key-string yyyyyyy
+R5(config-keychain-key)#send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018
+R5(config-keychain-key)#accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018
+R5(config-keychain-key)#cryptographic-algorithm hmac-sha-256
+R5(config-keychain-key)#end
+R5(config)#interface GigabitEthernet0/2
+R5(config-if)#ip ospf authentication key-chain OSPF_KEY_CHAIN  
+
+CCI: CCI-000803
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 5 permit x.13.1.0/24 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 10 permit x.13.2.0/24 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 15 permit x.13.3.0/24 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 20 permit x.13.4.0/24 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>51ebf6b6-8ec3-4249-838e-29d403672177</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000520 - Routing Protocol</RuleName>
+          <Comments>The Cisco BGP router must be configured to reject outbound route advertisements for any prefixes that do not belong to any customers or the local autonomous system (AS).</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Step 1: Verify that a prefix list has been configured containing prefixes belonging to customers as well as the local AS as shown in the example below.
+
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 5 permit x.13.1.0/24 le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 10 permit x.13.2.0/24 le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 15 permit x.13.3.0/24 le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 20 permit x.13.4.0/24 le 32
+…
+…
+…
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 80 deny 0.0.0.0/0 ge 8
+
+Step 2: Verify that the prefix lists has been applied to all CE peers as shown in the example below.
+
+router bgp 64512
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor x.12.4.14 remote-as 64514
+ neighbor x.12.4.14 prefix-list CE_PREFIX_ADVERTISEMENTS out
+ neighbor x.12.4.16 remote-as 64516
+ neighbor x.12.4.16 prefix-list CE_PREFIX_ADVERTISEMENTS out
+
+If the router is not configured to reject outbound route advertisements that do not belong to any customers or the local AS, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone.
+
+Step 1: Configure a prefix list for containing all customer and local AS prefixes as shown in the example below.
+
+R1(config)#ip prefix-list CE_PREFIX_ADVERTISEMENTS permit x.13.1.0/24 le 32
+R1(config)#ip prefix-list CE_PREFIX_ADVERTISEMENTS permit x.13.2.0/24 le 32
+R1(config)#ip prefix-list CE_PREFIX_ADVERTISEMENTS permit x.13.3.0/24 le 32
+R1(config)#ip prefix-list CE_PREFIX_ADVERTISEMENTS permit x.13.4.0/24 le 32
+…
+…
+…
+R1(config)#ip prefix-list CE_PREFIX_ADVERTISEMENTS deny 0.0.0.0/0 ge 8  
+
+CCI: CCI-001368
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>rd 13:13</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>route-target export 13:13</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>route-target import 13:13</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>018702da-73d1-43b5-8170-2e4071bb53a6</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000640 - Routing Protocol</RuleName>
+          <Comments>The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance with the appropriate Route Target (RT).</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the design plan for MPLS/L3VPN and VRF-lite to determine what RTs have been assigned for each VRF. Review the router configuration and verify that the correct RT is configured for each VRF. In the example below, route target 13:13 has been configured for customer 1.
+
+ip vrf CUST1
+ rd 13:13
+ route-target export 13:13
+ route-target import 13:13
+
+If there are VRFs configured with the wrong RT, this is a finding.
+
+Fix Text: Configure the router to have each VRF instance defined with the correct RT.
+
+R5(config)#ip vrf CUST1
+R5(config-vrf)#route-target import 13:13
+R5(config-vrf)#route-target export 13:13
+R5(config-vrf)#end  
+
+CCI: CCI-000366
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart>ip vrf CUST1</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>2</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>key chain OSPF_KEY_CHAIN</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>key 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>key-string xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>key 2</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>key-string yyyyyyy</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>2d50507d-cfde-46e7-899f-3263fe799520</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000030 - Routing Protocol</RuleName>
+          <Comments>The Cisco router must be configured to use keys with a duration not exceeding 180 days for authenticating routing protocol messages.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Review the start times for each key within the configured key chains used for routing protocol authentication as shown in the example below.
+
+key chain OSPF_KEY_CHAIN
+ key 1
+ key-string xxxxxxx
+ send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018
+ accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018
+ key 2
+ key-string yyyyyyy
+ send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018
+ accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018
+
+Note: Key chains must be configured to authenticate routing protocol messages as it is the only way to set an expiration.
+
+If any key has a lifetime of more than 180 days, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone.
+
+Configure each key used for routing protocol authentication to have a lifetime of no more than 180 days as shown in the example below.
+
+R5(config)#key chain OSPF_KEY_CHAIN
+R5(config-keychain)#key 1
+R5(config-keychain-key)#key-string xxxxxx
+R5(config-keychain-key)#send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018
+R5(config-keychain-key)#accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018
+R5(config-keychain-key)#exit
+R5(config-keychain)#key 2
+R5(config-keychain-key)#key-string yyyyyyy
+R5(config-keychain-key)#send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018
+R5(config-keychain-key)#accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018
+R5(config-keychain-key)#end  
+
+CCI: CCI-000366
+
+
+CCI: CCI-002205
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>2bb7a0de-7670-4a77-922d-3e2d920fc10b</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000630 - Routing Protcol</RuleName>
+          <Comments>The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance bound to the appropriate physical or logical interfaces to maintain traffic separation between all MPLS L3VPNs.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Step 1: Review the design plan for deploying L3VPN and VRF-lite. 
+
+Step 2: Review the design plan for deploying L3VPN and VRF-lite. Review all CE-facing interfaces and verify that the proper VRF is defined via the ip vrf forwarding command. In the example below, COI1 is bound to interface GigabitEthernet0/1, while COI2 is bound to GigabitEthernet0/2.
+
+interface GigabitEthernet0/1
+ description link to COI1
+ ip vrf forwarding COI1
+ ip address x.1.0.1 255.255.255.0
+!
+interface GigabitEthernet0/2
+ description link to COI2
+ ip vrf forwarding COI2
+ ip address x.2.0.2 255.255.255.0
+
+If any VRFs are not bound to the appropriate physical or logical interface, this is a finding.
+
+Fix Text: Configure the PE router to have each VRF bound to the appropriate physical or logical interfaces to maintain traffic separation between all MPLS L3VPNs.  
+
+CCI: CCI-000366
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Regex</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>2</ErrorLevel>
+          <SimplePatternText>ip vrf forwarding (COI1|COI2)</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>router bgp nn</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>no synchronization</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>bgp log-neighbor-changes</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.x.x.x remote-as nn</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.x.x.x password xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>key chain EIGRP_KEY</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>key 1
+</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> key-string xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>interface GigabitEthernet0/0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip address x.x.x.x 255.255.255.0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip authentication mode eigrp 1 md5</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip authentication key-chain eigrp 1 EIGRP_KEY</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>interface GigabitEthernet0/0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip address x.x.x.x 255.255.255.0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip router isis</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>isis password xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>interface GigabitEthernet0/0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip address x.x.x.x 255.255.255.0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip ospf authentication-key xxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>50b13981-4bb4-40c4-bd15-4620a363f68a</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000020 - Routing Protocol</RuleName>
+          <Comments>The Cisco router must be configured to implement message authentication for all control plane protocols.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration. Verify that neighbor router authentication is enabled for all routing protocols. The configuration examples below depicts OSPF, EIGRP, IS-IS and BGP authentication.
+
+BGP Example
+
+router bgp nn
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor x.x.x.x remote-as nn
+ neighbor x.x.x.x password xxxxxxx
+
+EIGRP Example
+
+key chain EIGRP_KEY
+ key 1
+ key-string xxxxxxx
+…
+…
+…
+interface GigabitEthernet0/0
+ ip address x.x.x.x 255.255.255.0
+ ip authentication mode eigrp 1 md5
+ ip authentication key-chain eigrp 1 EIGRP_KEY
+
+IS-IS Example
+
+interface GigabitEthernet0/0
+ ip address x.x.x.x 255.255.255.0
+ ip router isis
+ isis password xxxxxxx
+
+OSPF Example
+
+interface GigabitEthernet0/0
+ ip address x.x.x.x 255.255.255.0
+ ip ospf authentication-key xxxxx
+
+If authentication is not enabled on all routing protocols, this is a finding.
+
+Fix Text: Configure authentication to be enabled for every protocol that affects the routing or forwarding tables.
+
+The example configuration commands below enables BGP, EIGRP, IS-IS, and OSPF authentication.
+
+BGP Example
+
+R1(config)#router bgp nn
+R1(config-router)#neighbor x.x.x.x password xxxxxx
+
+EIGRP Example
+
+R5(config)#key chain EIGRP_KEY
+R5(config-keychain)#key 1
+R5(config-keychain-key)#key-string xxxxx
+R5(config-keychain-key)#exit
+R5(config-keychain)#exit
+R5(config)#int g0/0
+R5(config-if)#ip authentication mode eigrp 1 md5
+R5(config-if)#ip authentication key-chain eigrp 1 EIGRP_KEY
+R5(config-if)#end
+
+IS-IS Example
+
+R5(config)#int g0/0
+R5(config-if)#isis password xxxxxx
+
+OSPF Example
+
+R5(config)#int g0/0
+R5(config-if)#ip ospf authentication-key xxxxx
+R5(config-if)#end
+  
+
+CCI: CCI-000366
+
+
+CCI: CCI-002205
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>EIGRP Example</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>interface GigabitEthernet1/0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip address x.x.x.x 255.255.255.0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip authentication mode eigrp 1 md5</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip authentication key-chain eigrp 1 EIGRP_KEY_CHAIN
+</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>IS-IS Example</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>interface GigabitEthernet1/0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> ip address x.x.x.x 255.255.255.0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> ip router isis</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> isis authentication mode md5</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>isis authentication key-chain ISIS_KEY_CHAIN</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>OSPF Example</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>interface GigabitEthernet1/0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> ip address x.x.x.x 255.255.255.0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> ip ospf authentication message-digest</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> ip ospf message-digest-key 1 md5 xxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>RIP Example</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>interface GigabitEthernet1/0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> ip rip authentication mode md5</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> ip rip authentication key-chain RIP_KEY_CHAIN</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>BGP Exampale</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>router bgp nn</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> no synchronization</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> bgp log-neighbor-changes</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> neighbor x.x.x.x remote-as nn</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern> neighbor x.x.x.x password xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>2a8e26ab-53cb-497e-b516-6a6ade44a1c5</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000040 - Routing Protocol</RuleName>
+          <Comments>The Cisco router must be configured to use encryption for routing protocol authentication</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration. For every routing protocol that affects the routing or forwarding tables, verify that neighbor router authentication is encrypting the authentication key as shown in the examples below.
+
+BGP Example
+
+router bgp nn
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor x.x.x.x remote-as nn
+ neighbor x.x.x.x password xxxxxxx
+
+Note: BGP authentication uses MD5 
+
+EIGRP Example
+
+interface GigabitEthernet1/0
+ ip address x.x.x.x 255.255.255.0
+ ip authentication mode eigrp 1 md5
+ ip authentication key-chain eigrp 1 EIGRP_KEY_CHAIN
+
+IS-IS Example
+
+interface GigabitEthernet1/0
+ ip address x.x.x.x 255.255.255.0
+ ip router isis
+ isis authentication mode md5
+ isis authentication key-chain ISIS_KEY_CHAIN
+
+OSPF Example
+
+interface GigabitEthernet1/0
+ ip address x.x.x.x 255.255.255.0
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 xxxxxx
+
+RIP Example
+
+interface GigabitEthernet1/0
+ ip rip authentication mode md5
+ ip rip authentication key-chain RIP_KEY_CHAIN
+
+If the routing protocol is not encrypting the authentication key, this is a finding.
+
+Fix Text: Configure all routing protocol authentications to encrypt the authentication key.
+
+BGP Example
+
+R1(config)#router bgp nn
+R1(config-router)#neighbor x.x.x.x password xxxxxx
+
+EIGRP Example
+
+R2(config)#int g0/1
+R2(config-if)#ip authentication mode eigrp 1 md5
+R2(config-if)#ip authentication key-chain eigrp 1 EIGRP_KEY_CHAIN
+
+IS-IS Example
+
+R5(config)#int g0/1
+R5(config-if)#isis authentication mode md5
+R5(config-if)#isis authentication key-chain ISIS_KEY_CHAIN
+
+OSPF Example
+
+R1(config)#int g1/0
+R1(config-if)#ip ospf authentication message-digest
+R1(config-if)#ip ospf message-digest-key 1 md5 xxxxxx
+
+RIP Example
+
+R2(config)#int g1/0
+R2(config-if)#ip rip authentication mode md5
+R2(config-if)#ip rip authentication key-chain RIP_KEY_CHAIN  
+
+CCI: CCI-000803
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>no synchronization</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>no bgp enforce-first-as</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>bgp log-neighbor-changes</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>redistribute static</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor 10.1.1.1 remote-as xx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor 10.1.1.1 password xxxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor 10.1.1.1 update-source Loopback0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>53cfd028-1a30-480a-b393-7154e511e1c9</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000580 - Routing Protocol</RuleName>
+          <Comments>The Cisco BGP router must be configured to use its loopback address as the source address for iBGP peering sessions.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Step 1: Review the router configuration to verify that a loopback address has been configured.
+
+interface Loopback0
+ ip address 10.1.1.1 255.255.255.255
+
+Step 2: Verify that the loopback interface is used as the source address for all iBGP sessions.
+
+router bgp xx
+ no synchronization
+ no bgp enforce-first-as
+ bgp log-neighbor-changes
+ redistribute static
+ neighbor 10.1.1.1 remote-as xx
+ neighbor 10.1.1.1 password xxxxxxxx
+ neighbor 10.1.1.1 update-source Loopback0
+
+If the router does not use its loopback address as the source address for all iBGP sessions, this is a finding.
+
+Fix Text: Configure the router to use its loopback address as the source address for all iBGP peering.
+
+R1(config)#router bgp xx
+R1(config-router)#neighbor 10.1.1.1 update-source Loopback0  
+
+CCI: CCI-000366
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart>router bgp xx</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>no synchronization</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>bgp log-neighbor-changes</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.1.1.9 remote-as yy</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.1.1.9 password yyyyyyyy</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.2.1.7 remote-as zz</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.2.1.7 password zzzzzzzzz</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>810800a3-87d7-41f9-a1b0-905b202616d9</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000480 - Routing Protocol</RuleName>
+          <Comments>The Cisco BGP router must be configured to use a unique key for each autonomous system (AS) that it peers with.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the BGP configuration to determine if it is peering with multiple autonomous systems. Interview the ISSM and router administrator to determine if unique keys are being used. 
+
+router bgp xx
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor x.1.1.9 remote-as yy
+ neighbor x.1.1.9 password yyyyyyyy
+ neighbor x.2.1.7 remote-as zz
+ neighbor x.2.1.7 password zzzzzzzzz
+
+If unique keys are not being used, this is a finding.
+
+Fix Text: Configure the router to use unique keys for each AS that it peers with as shown in the example below.
+
+R1(config)#router bgp xx
+R1(config-router)#neighbor x.1.1.9 password yyyyyyyy 
+R1(config-router)#neighbor x.2.1.7 password zzzzzzzzz  
+
+CCI: CCI-000366
+
+
+CCI: CCI-002205
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart>router bgp xx</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>no synchronization</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>bgp log-neighbor-changes</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.1.1.9 remote-as yy</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.1.1.9 prefix-list FILTER_PREFIXES in</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.2.1.7 remote-as zz</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.2.1.7 prefix-list FILTER_PREFIXES in</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>4a6cb32c-76d4-4e23-8085-99754334ed0f</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000500 - Routing Protocol</RuleName>
+          <Comments>The Cisco BGP router must be configured to reject inbound route advertisements for any prefixes belonging to the local autonomous system (AS).</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to verify that it will reject routes belonging to the local AS.
+
+Step 1: Verify a prefix list has been configured containing prefixes belonging to the local AS. In the example below x.13.1.0/24 is the global address space allocated to the local AS.
+
+ip prefix-list PREFIX_FILTER seq 5 deny 0.0.0.0/8 le 32
+…
+…
+…
+ip prefix-list PREFIX_FILTER seq 74 deny x.13.1.0/24 le 32
+ip prefix-list PREFIX_FILTER seq 75 permit 0.0.0.0/0 ge 8
+
+Step 2: Verify that the prefix list has been applied to all external BGP peers as shown in the example below.
+
+router bgp xx
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor x.1.1.9 remote-as yy
+ neighbor x.1.1.9 prefix-list PREFIX_FILTER in
+ neighbor x.2.1.7 remote-as zz
+ neighbor x.2.1.7 prefix-list PREFIX_FILTER in
+
+If the router is not configured to reject inbound route advertisements belonging to the local AS, this is a finding.
+
+Fix Text: Configure the router to reject inbound route advertisements for any prefixes belonging to the local AS.
+
+Step 1: Add to the prefix filter list those prefixes belonging to the local autonomous system.
+
+R1(config)#ip prefix-list PREFIX_FILTER seq 74 deny x.13.1.0/24 le 32
+
+Step 2: If not already completed to be compliant with previous requirement, apply the prefix list filter inbound to each external BGP neighbor as shown in the example.
+
+R1(config)#router bgp xx
+R1(config-router)#neighbor x.1.1.9 prefix-list PREFIX_FILTER in
+R1(config-router)#neighbor x.2.1.7 prefix-list PREFIX_FILTER in  
+
+CCI: CCI-001368</RemediateScript>
+          <ConfigBlockStart>router bgp xx</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip prefix-list PREFIX_FILTER_CUST1 seq 5 permit x.13.1.0/24 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>
+ip prefix-list PREFIX_FILTER_CUST1 seq 10 deny 0.0.0.0/0 ge 8</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>
+ip prefix-list PREFIX_FILTER_CUST2 seq 5 permit x.13.2.0/24 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>
+ip prefix-list PREFIX_FILTER_CUST2 seq 10 deny 0.0.0.0/0 ge 8</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>3ec6cd6f-a01a-4a90-b5cc-9c190e3fd667</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000510 - Routing Protocol</RuleName>
+          <Comments>The Cisco BGP router must be configured to reject inbound route advertisements from a customer edge (CE) router for prefixes that are not allocated to that customer.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to verify that there are ACLs defined to only accept routes for prefixes that belong to specific customers. 
+
+Step 1: Verify prefix list has been configured for each customer containing prefixes belonging to each customer as shown in the example below.
+
+ip prefix-list PREFIX_FILTER_CUST1 seq 5 permit x.13.1.0/24 le 32
+ip prefix-list PREFIX_FILTER_CUST1 seq 10 deny 0.0.0.0/0 ge 8
+ip prefix-list PREFIX_FILTER_CUST2 seq 5 permit x.13.2.0/24 le 32
+ip prefix-list PREFIX_FILTER_CUST2 seq 10 deny 0.0.0.0/0 ge 8
+
+Step 2: Verify that the prefix lists has been applied to all to the applicable CE peers as shown in the example below.
+
+router bgp xx
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor x.12.4.14 remote-as 64514
+ neighbor x.12.4.14 prefix-list FILTER_PREFIXES_CUST1 in
+ neighbor x.12.4.16 remote-as 64516
+ neighbor x.12.4.16 prefix-list FILTER_PREFIXES_CUST2 in
+
+Note: Routes to PE-CE links within a VPN are needed for troubleshooting end-to-end connectivity across the MPLS/IP backbone. Hence, these prefixes are an exception to this requirement.
+
+If the router is not configured to reject inbound route advertisements from each CE router for prefixes that are not allocated to that customer, this is a finding.
+
+Fix Text: Configure the router to reject inbound route advertisements from each CE router for prefixes that are not allocated to that customer.
+
+Step 1: Configure a prefix list for each customer containing prefixes belonging to each.
+
+R1(config)#ip prefix-list PREFIX_FILTER_CUST1 permit x.13.1.0/24 le 32
+R1(config)#ip prefix-list PREFIX_FILTER_CUST1 deny 0.0.0.0/0 ge 8
+R1(config)#ip prefix-list PREFIX_FILTER_CUST2 permit x.13.2.0/24 le 32
+R1(config)#ip prefix-list PREFIX_FILTER_CUST2 deny 0.0.0.0/0 ge 8
+
+Step 2: Apply the prefix list filter inbound to each CE neighbor as shown in the example.
+
+R1(config)#router bgp xx
+R1(config-router)#neighbor x.12.4.14 prefix-list FILTER_PREFIXES_CUST1 in
+R1(config-router)#neighbor x.12.4.16 prefix-list FILTER_PREFIXES_CUST2 in  
+
+CCI: CCI-001368
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip prefix-list PREFIX_FILTER seq 5 deny 0.0.0.0/8 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 10 deny 10.0.0.0/8 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 15 deny 100.64.0.0/10 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 20 deny 127.0.0.0/8 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 25 deny 169.254.0.0/16 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 30 deny 172.16.0.0/12 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 35 deny 192.0.2.0/24 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 40 deny 192.88.99.0/24 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 45 deny 192.168.0.0/16 le 32
+</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 50 deny 198.18.0.0/15 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 55 deny 198.51.100.0/24 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 60 deny 203.0.113.0/24 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 65 deny 224.0.0.0/4 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 70 deny 240.0.0.0/4 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list PREFIX_FILTER seq 75 permit 0.0.0.0/0 ge 8</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>ad4ec6ef-84e4-4e83-bad8-ac0a645eb807</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000490 - Routing Protocol</RuleName>
+          <Comments>The Cisco BGP router must be configured to reject inbound route advertisements for any Bogon prefixes.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to verify that it will reject BGP routes for any Bogon prefixes.
+
+Step 1: Verify a prefix list has been configured containing the current Bogon prefixes as shown in the example below.
+
+ip prefix-list PREFIX_FILTER seq 5 deny 0.0.0.0/8 le 32
+ip prefix-list PREFIX_FILTER seq 10 deny 10.0.0.0/8 le 32
+ip prefix-list PREFIX_FILTER seq 15 deny 100.64.0.0/10 le 32
+ip prefix-list PREFIX_FILTER seq 20 deny 127.0.0.0/8 le 32
+ip prefix-list PREFIX_FILTER seq 25 deny 169.254.0.0/16 le 32
+ip prefix-list PREFIX_FILTER seq 30 deny 172.16.0.0/12 le 32
+ip prefix-list PREFIX_FILTER seq 35 deny 192.0.2.0/24 le 32
+ip prefix-list PREFIX_FILTER seq 40 deny 192.88.99.0/24 le 32
+ip prefix-list PREFIX_FILTER seq 45 deny 192.168.0.0/16 le 32
+ip prefix-list PREFIX_FILTER seq 50 deny 198.18.0.0/15 le 32
+ip prefix-list PREFIX_FILTER seq 55 deny 198.51.100.0/24 le 32
+ip prefix-list PREFIX_FILTER seq 60 deny 203.0.113.0/24 le 32
+ip prefix-list PREFIX_FILTER seq 65 deny 224.0.0.0/4 le 32
+ip prefix-list PREFIX_FILTER seq 70 deny 240.0.0.0/4 le 32
+ip prefix-list PREFIX_FILTER seq 75 permit 0.0.0.0/0 ge 8
+
+Step 2: Verify that the prefix list has been applied to all external BGP peers as shown in the example below.
+
+router bgp xx
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor x.1.1.9 remote-as yy
+ neighbor x.1.1.9 prefix-list PREFIX_FILTER in
+ neighbor x.2.1.7 remote-as zz
+ neighbor x.2.1.7 prefix-list PREFIX_FILTER in
+
+Route Map Alternative 
+
+Verify that the route map applied to the external neighbors references the configured Bogon prefix list shown above.
+
+router bgp xx
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor x.1.1.9 remote-as yy
+ neighbor x.1.1.9 route-map FILTER_PREFIX_MAP
+ neighbor x.2.1.7 remote-as zz
+ neighbor x.2.1.7 route-map FILTER_PREFIX_MAP
+…
+route-map FILTER_PREFIX_MAP permit 10
+ match ip address prefix-list PREFIX_FILTER
+
+If the router is not configured to reject inbound route advertisements for any Bogon prefixes, this is a finding.
+
+Fix Text: Configure the router to reject inbound route advertisements for any Bogon prefixes.
+
+Step 1: Configure a prefix list containing the current Bogon prefixes as shown below.
+
+R1(config)#ip prefix-list PREFIX_FILTER deny 0.0.0.0/8 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 10.0.0.0/8 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 100.64.0.0/10 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 127.0.0.0/8 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 169.254.0.0/16 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 172.16.0.0/12 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 192.0.2.0/24 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 192.88.99.0/24 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 192.168.0.0/16 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 198.18.0.0/15 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 198.51.100.0/24 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 203.0.113.0/24 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 224.0.0.0/4 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 240.0.0.0/4 le 32
+R1(config)#ip prefix-list PREFIX_FILTER deny 240.0.0.0/4 le 32
+R1(config)#ip prefix-list PREFIX_FILTER permit 0.0.0.0/0 ge 8
+
+Step 2: Apply the prefix list filter inbound to each external BGP neighbor as shown in the example.
+
+R1(config)#router bgp xx
+R1(config-router)#neighbor x.1.1.9 prefix-list PREFIX_FILTER in
+R1(config-router)#neighbor x.2.1.7 prefix-list PREFIX_FILTER in
+
+Route Map Alternative 
+
+Step 1: Configure the route map referencing the configured prefix list above.
+
+R1(config)#route-map FILTER_PREFIX_MAP 10
+R1(config-route-map)#match ip address prefix-list PREFIX_FILTER
+R1(config-route-map)#exit
+
+Step 2: Apply the route-map inbound to each external BGP neighbor as shown in the example.
+
+R1(config)#router bgp xx
+R1(config-router)#neighbor x.1.1.9 route-map FILTER_PREFIX_MAP in
+R1(config-router)#neighbor x.2.1.7 route-map FILTER_PREFIX_MAP in 
+R1(config-router)#end  
+
+CCI: CCI-001368
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>no synchronization</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>bgp log-neighbor-changes</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.1.1.9 remote-as yy</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.1.1.9 password xxxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.1.1.9 ttl-security hops 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.2.1.7 remote-as zz</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.2.1.7 password xxxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.2.1.7 ttl-security hops 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>af8d95d9-5bc0-410d-85e8-af35565029ec</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000470 - Routing Protocol</RuleName>
+          <Comments>The Cisco BGP router must be configured to enable the Generalized TTL Security Mechanism (GTSM).</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the BGP configuration to verify that TTL security has been configured for each external neighbor as shown in the example below.
+
+router bgp xx
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor x.1.1.9 remote-as yy
+ neighbor x.1.1.9 password xxxxxxxx
+ neighbor x.1.1.9 ttl-security hops 1
+ neighbor x.2.1.7 remote-as zz
+ neighbor x.2.1.7 password xxxxxxxx
+ neighbor x.2.1.7 ttl-security hops 1
+
+If the router is not configured to use GTSM for all Exterior Border Gateway Protocol peering sessions, this is a finding.
+
+Fix Text: Configure TTL security on all external BGP neighbors as shown in the example below.
+
+R1(config)#router bgp xx
+R1(config-router)#neighbor x.1.1.9 ttl-security hops 1
+R1(config-router)#neighbor x.2.1.7 ttl-security hops 1  
+
+CCI: CCI-002385
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart>router bgp xx</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>-----------------------OSPF Example-------------------</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>router ospf 1</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>mpls ldp sync
+</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>-------------------------IS-IS Example------------------</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>router isis</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>mpls ldp sync</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>net 49.0001.1234.1600.5531.00</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>a0f21d3c-4f51-43e5-b47c-afa58dd37a23</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000600 - Routing Protocol</RuleName>
+          <Comments>The Cisco MPLS router must be configured to synchronize IGP and LDP to minimize packet loss when an IGP adjacency is established prior to LDP peers completing label exchange.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router OSPF or IS-IS configuration and verify that LDP will synchronize with the link-state routing protocol as shown in the example below.
+
+OSPF Example
+
+router ospf 1
+ mpls ldp sync
+
+IS-IS Example
+
+router isis
+ mpls ldp sync
+ net 49.0001.1234.1600.5531.00
+
+If the router is not configured to synchronize IGP and LDP, this is a finding.
+
+Fix Text: Configure the MPLS router to synchronize IGP and LDP, minimizing packet loss when an IGP adjacency is established prior to LDP peers completing label exchange.
+
+OSPF Example
+
+R2(config)#router ospf 1
+R2(config-router)#mpls ldp sync
+
+IS-IS Example
+
+R5(config)#router isis
+R5(config-router)#mpls ldp sync  
+
+CCI: CCI-000366
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>rd 13:13</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>84922414-9ee5-47fd-891a-c9bddbdbc98c</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000650 - Routing Protocol</RuleName>
+          <Comments>The Cisco PE router must be configured to have each VRF with the appropriate Route Distinguisher (RD).</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the design plan for MPLS/L3VPN to determine what RD have been assigned for each VRF. Review the router configuration and verify that the correct RD is configured for each VRF. In the example below, route distinguisher 13:13 has been configured for customer 1.
+
+ip vrf CUST1
+ rd 13:13
+
+Note: This requirement is only applicable for MPLS L3VPN implementations.
+
+If the wrong RD has been configured for any VRF, this is a finding.
+
+Fix Text: Configure the correct RD for each VRF.
+
+R5(config)#ip vrf CUST1
+R5(config-vrf)#rd 13:13
+R5(config-vrf)#end  
+
+CCI: CCI-000366
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart>ip vrf CUST1</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>no synchronization</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>bgp log-neighbor-changes</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.1.4.12 remote-as yy</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>neighbor x.1.4.12 prefix-list FILTER _CORE_PREFIXES out</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>b114acd8-f947-4a51-ae63-c9ffa181583c</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000530 - Routing Protocols</RuleName>
+          <Comments>The Cisco BGP router must be configured to reject outbound route advertisements for any prefixes belonging to the IP core.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Step 1: Verify that a prefix list has been configured containing prefixes belonging to the IP core.
+
+ip prefix-list FILTER_CORE_PREFIXES seq 5 deny x.1.1.0/24 le 32
+ip prefix-list FILTER _CORE_PREFIXES seq 10 deny x.1.2.0/24 le 32
+ip prefix-list FILTER _CORE_PREFIXES seq 15 permit 0.0.0.0/0 ge 8
+
+Step 2: Verify that the prefix lists has been applied to all external BGP peers as shown in the example below.
+
+router bgp xx
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor x.1.4.12 remote-as yy
+ neighbor x.1.4.12 prefix-list FILTER _CORE_PREFIXES out
+
+If the router is not configured to reject outbound route advertisements for prefixes belonging to the IP core, this is a finding.
+
+Fix Text: Step 1: Configure a prefix list for containing all customer and local AS prefixes as shown in the example below.
+
+R1(config)#ip prefix-list FILTER_CORE_PREFIXES deny x.1.1.0/24 le 32
+R1(config)#ip prefix-list FILTER _CORE_PREFIXES deny x.1.2.0/24 le 32
+R1(config)#ip prefix-list FILTER _CORE_PREFIXES permit 0.0.0.0/0 ge 8
+
+Step 2: Apply the prefix list filter outbound to each CE neighbor as shown in the example.
+
+R1(config)#router bgp xx
+R1(config-router)#neighbor x.1.4.12 prefix-list FILTER _CORE_PREFIXES out  
+
+CCI: CCI-001097
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart>router bgp xx</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip prefix-list FILTER_PREFIX_LENGTH seq 10 deny 0.0.0.0/0 le 32</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip prefix-list FILTER_PREFIX_LENGTH seq 5 permit 0.0.0.0/0 ge 8 le 24</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>48041c2b-cbd4-4a4c-8b90-e186e18b5f58</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000570 - Routing Protocol</RuleName>
+          <Comments>The Cisco BGP router must be configured to limit the prefix size on any inbound route advertisement to /24 or the least significant prefixes issued to the customer.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Review the router configuration to determine if it is compliant with this requirement.
+
+Step 1: Verify that a route filter has been configured to reject prefixes longer than /24, or the least significant prefixes issued to the customers as shown in the example below:
+
+ip prefix-list FILTER_PREFIX_LENGTH seq 5 permit 0.0.0.0/0 ge 8 le 24
+ip prefix-list FILTER_PREFIX_LENGTH seq 10 deny 0.0.0.0/0 le 32
+
+Step 2: Verify that prefix filtering has been applied to each eBGP peer as shown in the example:
+
+router bgp xx
+ neighbor x.1.1.9 remote-as yy
+ neighbor x.1.1.9 prefix-list FILTER_PREFIX_LENGTH in
+ neighbor x.2.1.7 remote-as zz
+ neighbor x.2.1.7 prefix-list FILTER_PREFIX_LENGTH in
+
+
+If the router is not configured to limit the prefix size on any inbound route advertisement to /24, or the least significant prefixes issued to the customer, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone.
+
+Configure the router to limit the prefix size on any route advertisement to /24 or the least significant prefixes issued to the customer.
+
+Step 1: Configure a prefix list to reject any prefix that is longer than /24.
+
+R1(config)#ip prefix-list FILTER_PREFIX_LENGTH permit 0.0.0.0/0 ge 8 le 24
+R1(config)#ip prefix-list FILTER_PREFIX_LENGTH deny 0.0.0.0/0 le 32
+
+
+Step 2: Apply the prefix list to all eBGP peers as shown in the example below.
+
+R1(config)#router bgp xx
+R1(config-router)#neighbor x.1.1.9 prefix-list FILTER_PREFIX_LENGTH in
+R1(config-router)#neighbor x.2.1.7 prefix-list FILTER_PREFIX_LENGTH in  
+
+CCI: CCI-002385
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+      </AssignedPolicyRules>
+      <Grouping>CSCO-IOS-RTR</Grouping>
+      <Comments />
+      <PolicyName>CSCO-IOS-RTR - Routing Protocol</PolicyName>
+    </Policy>
+  </AssignedPolicies>
+  <ReportStatus>Enabled</ReportStatus>
+</PolicyReport>

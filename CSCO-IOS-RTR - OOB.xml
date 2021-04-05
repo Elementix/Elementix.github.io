@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PolicyReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ID>61786d56-1909-433a-a86d-7c4518e608e8</ID>
+  <Name>CSCO-IOS-RTR - OOB</Name>
+  <Comments>Cisco IOS Router RTR Security Technical Implementation Guide: Version: 1: Release: 2: 24 JAN 2020</Comments>
+  <Group>Cisco-IOS-RTR-V1R1</Group>
+  <ShowSummaryFlag>false</ShowSummaryFlag>
+  <ShowRulesWithoutViolationFlag>true</ShowRulesWithoutViolationFlag>
+  <AssignedPolicies>
+    <Policy>
+      <NodeSelectionString>WebCriteria:&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfWebSelectionCriteria xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;WebSelectionCriteria&gt;
+    &lt;Id&gt;f2d426bb-707a-42f0-90c8-a869929c07c5&lt;/Id&gt;
+    &lt;LogicalCondition /&gt;
+    &lt;SelectedColumn&gt;Vendor&lt;/SelectedColumn&gt;
+    &lt;MatchType&gt;=&lt;/MatchType&gt;
+    &lt;SelectedValue&gt;Cisco&lt;/SelectedValue&gt;
+  &lt;/WebSelectionCriteria&gt;
+&lt;/ArrayOfWebSelectionCriteria&gt;SQL:Where (Vendor = 'Cisco') </NodeSelectionString>
+      <ConfigTypes>Running</ConfigTypes>
+      <AssignedPolicyRules>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip vrf MGMT</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>rd 4:4</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>route-target export 4:4</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>route-target import 4:4</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>route-target import 8:8</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip vrf PROD</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>rd 8:8</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>route-target import 8:8</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>route-target export 8:8</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>f9536915-6c2a-4262-b6ad-0d203bb485ff</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000430 - OOB</RuleName>
+          <Comments>The Cisco out-of-band management (OOBM) gateway router must be configured to not redistribute routes between the management network routing domain and the managed network routing domain.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Verify the Interior Gateway Protocol (IGP) instance used for the managed network does not redistribute routes into the IGP instance used for the management network, and vice versa. The example below imports OSPF routes from the production route table (VRF PROD) into the management route table (VRF MGMT) using BGP.
+
+ip vrf MGMT
+ rd 4:4
+ route-target export 4:4
+ route-target import 4:4
+ route-target import 8:8
+!
+ip vrf PROD
+ rd 8:8
+ route-target import 8:8
+ route-target export 8:8
+…
+…
+…
+router ospf 1 vrf MGMT
+ log-adjacency-changes
+ redistribute bgp 64512 subnets
+ network 0.0.0.0 255.255.255.255 area 0
+!
+router ospf 2 vrf PROD
+ log-adjacency-changes
+ network 0.0.0.0 255.255.255.255 area 0
+!
+router bgp 64512
+ no synchronization
+ bgp log-neighbor-changes
+ no auto-summary
+ !
+ address-family ipv4 vrf MGMT
+ no synchronization
+ redistribute ospf 1 vrf MGMT
+ exit-address-family
+ !
+ address-family ipv4 vrf PROD
+ no synchronization
+ redistribute ospf 2 vrf PROD
+ exit-address-family
+
+If the IGP instance used for the managed network redistributes routes into the IGP instance used for the management network, or vice versa, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone.
+
+Remove the configuration that imports routes from the managed network into the management network or vice versa as shown in the example below.
+
+R1(config)#ip vrf MGMT
+R1(config-vrf)#no route-target import 8:8  
+
+CCI: CCI-001414
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip access-group EGRESS_MANAGEMENT_ACL out  </Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip access-group INGRESS_MANAGEMENT_ACL in</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>6921f82a-62bc-4502-a1fa-66b6ee848ef9</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000450 - OOB</RuleName>
+          <Comments>The Cisco router must be configured to only permit management traffic that ingresses and egresses the out-of-band management (OOBM) interface.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is only applicable where management access to the router is via an OOBM interface which is not a true OOBM interface.
+
+Step 1: Verify that the managed interface has an inbound and outbound ACL configured. 
+
+interface GigabitEthernet0/7
+ description link to OOBM access switch
+ ip address 10.11.1.22 255.255.255.0
+ ip access-group INGRESS_MANAGEMENT_ACL in
+ ip access-group EGRESS_MANAGEMENT_ACL out
+
+Step 2: Verify that the ingress ACL only allows management and ICMP traffic. 
+
+ip access-list extended INGRESS_MANAGEMENT_ACL
+ permit tcp any host 10.11.1.22 eq tacacs
+ permit tcp any host 10.11.1.22 eq 22
+ permit udp any host 10.11.1.22 eq snmp
+ permit udp any host 10.11.1.22 eq snmptrap
+ permit udp any host 10.11.1.22 eq ntp
+ permit icmp any host 10.11.1.22
+ deny ip any any log-input
+
+Step 3: Verify that the egress ACL blocks any transit traffic.
+
+ip access-list extended EGRESS_MANAGEMENT_ACL
+ deny ip any any log-input
+
+Note: On Cisco routers, local generated packets are not inspected by outgoing interface access-lists. Hence, the above configuration would simply drop any packets not generated by the router; hence, blocking any transit traffic.
+
+If the router does not restrict traffic that ingresses and egresses the management interface, this is a finding.
+
+Fix Text: If the management interface is not a dedicated OOBM interface, it must be configured with both an ingress and egress ACL.
+
+Step 1: Configure an ingress ACL a shown in the example below.
+
+R5(config)#ip access-list extended INGRESS_MANAGEMENT_ACL
+R5(config-ext-nacl)#permit tcp any host 10.11.1.22 eq tacacs
+R5(config-ext-nacl)#permit tcp any host 10.11.1.22 eq 22
+R5(config-ext-nacl)#permit udp any host 10.11.1.22 eq snmp
+R5(config-ext-nacl)#permit udp any host 10.11.1.22 eq snmptrap
+R5(config-ext-nacl)#permit udp any host 10.11.1.22 eq ntp
+R5(config-ext-nacl)#permit icmp any host 10.11.1.22
+R5(config-ext-nacl)#deny ip any any log-input
+R5(config-ext-nacl)#exit
+
+Step 2: Configure an egress ACL a shown in the example below.
+
+R5(config)#ip access-list extended EGRESS_MANAGEMENT_ACL
+R5(config-ext-nacl)#deny ip any any log-input
+R5(config-ext-nacl)#exit
+
+Step 3: Apply the ACLs to the OOBM interfaces.
+
+R4(config)#int g0/7
+R4(config-if)#ip access-group INGRESS_MANAGEMENT_ACL in
+R4(config-if)#ip access-group EGRESS_MANAGEMENT_ACL out  
+
+CCI: CCI-001097
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>permit tcp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq tacacs</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>permit tcp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq 22</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq snmp</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq snmp-trap</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq syslog</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>permit icmp 10.1.34.0 0.0.0.255 10.22.22.0 0.0.0.255 </Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>deny ip any any log-input</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>3f2c73d8-f172-4d0a-8710-86a35e470c12</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000410 - OOB</RuleName>
+          <Comments>The Cisco out-of-band management (OOBM) gateway router must be configured to forward only authorized management traffic to the Network Operations Center (NOC).</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Review the network topology diagram to determine connectivity between the managed network and the NOC. Review the OOBM gateway router configuration to validate the path that the management traffic traverses. Verify that only management traffic is forwarded through the OOBM interface or IPsec tunnel.
+
+If an OOBM link is used, verify that the only authorized management traffic is transported to the NOC by reviewing the outbound ACL applied to the OOBM interface as shown in the example below.
+
+Step 1: Note the outbound ACL applied to the OOBM interface.
+
+interface GigabitEthernet0/2
+ description OOB link to NOC
+ ip address 10.11.1.8 255.255.255.0
+ ip access-group MGMT_TRAFFIC_ACL out
+
+Step 2: Review the outbound ACL and verify only management traffic is forwarded to the NOC.
+
+ip access-list extended MGMT_TRAFFIC_ACL
+ permit tcp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq tacacs
+ permit tcp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq 22
+ permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq snmp
+ permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq snmp-trap
+ permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq syslog
+ permit icmp 10.1.34.0 0.0.0.255 10.22.22.0 0.0.0.255 
+ deny ip any any log-input
+
+If an IPSec tunnel is used, verify that the only authorized management traffic is transported to the NOC.
+
+Step 1: Note the crypto map applied to the external interface.
+
+ interface interface GigabitEthernet0/2
+ description link to DISN
+ ip address x.1.24.4 255.255.255.0
+ crypto map IPSEC_MGMT_MAP
+
+Step 2: Review the crypto map that was bound to the external interface and note the ACL defined that identifies the interesting traffic for the IPsec tunnel.
+
+crypto map IPSEC_MGMT_MAP 10 ipsec-isakmp
+ set peer x.1.12.1
+ set transform-set TRANS_SET
+ match address MGMT_TRAFFIC_ACL
+
+Step 3: Review the ACL defined in the crypto map and verify only management traffic is forwarded to the NOC.
+
+ip access-list extended MGMT_TRAFFIC_ACL
+ permit tcp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq tacacs
+ permit tcp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq 22
+ permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq snmp
+ permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq snmp-trap
+ permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq syslog
+ permit icmp 10.1.34.0 0.0.0.255 10.22.22.0 0.0.0.255
+
+Note: ICMP is permitted for troubleshooting purposes. The IPSec SA can only identify interesting traffic via address, protocol, and port; hence, the ICMP traffic cannot be qualified via type attribute.
+
+If traffic other than authorized management traffic is permitted through the OOBM interface or IPsec tunnel, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone.
+
+Configure ACLs to permit only authorized management traffic into IPsec tunnels or the OOBM interface used for forwarding management data as shown in the examples below.
+
+OOBM Link
+R4(config)#ip access-list extended MGMT_TRAFFIC_ACL
+R4(config-ext-nacl)#permit tcp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq tacacs
+R4(config-ext-nacl)#permit tcp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq 22
+R4(config-ext-nacl)#permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq snmp
+R4(config-ext-nacl)#permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq snmp-trap
+R4(config-ext-nacl)#permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq syslog
+R4(config-ext-nacl)#permit icmp 10.1.34.0 0.0.0.255 10.22.22.0 0.0.0.255 echo
+R4(config-ext-nacl)#permit icmp 10.1.34.0 0.0.0.255 10.22.22.0 0.0.0.255 echo-reply
+R4(config-ext-nacl)#deny ip any any log-input
+R4(config-ext-nacl)#exit
+
+IPsec Tunnel
+R4(config)#ip access-list extended MGMT_TRAFFIC_ACL
+R4(config-ext-nacl)#permit tcp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq tacacs
+R4(config-ext-nacl#permit tcp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq 22
+R4(config-ext-nacl)#permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq snmp
+R4(config-ext-nacl)#permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq snmp-trap
+R4(config-ext-nacl)#permit udp 10.1.34.0 0.0.0.255 10.22.2.0 0.0.0.255 eq syslog
+R4(config-ext-nacl)#permit icmp 10.1.34.0 0.0.0.255 22.22.22.0 0.0.0.255
+R4(config-ext-nacl)#exit  
+
+CCI: CCI-001097
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart>ip access-list extended MGMT_TRAFFIC_ACL</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>router ospf 1 vrf MGMT</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>log-adjacency-changes</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>network 0.0.0.0 255.255.255.255 area 0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>router ospf 2 vrf PROD</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>log-adjacency-changes</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>network 0.0.0.0 255.255.255.255 area 0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>50e0b01f-aba3-4c2c-9ec2-c078c15ca613</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000420 - OOB</RuleName>
+          <Comments>The Cisco out-of-band management (OOBM) gateway router must be configured to have separate IGP instances for the managed network and management network.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Verify that the OOBM interface is an adjacency in the IGP domain for the management network via separate VRF as shown in the example below.
+
+router ospf 1 vrf MGMT
+ log-adjacency-changes
+ network 0.0.0.0 255.255.255.255 area 0
+!
+router ospf 2 vrf PROD
+ log-adjacency-changes
+ network 0.0.0.0 255.255.255.255 area 0
+
+If the router is not configured to have separate IGP instances for the managed network and management network, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone.
+
+Configure the router to have a separate IGP instance for the management network as shown in the example below.
+
+R3(config)#router ospf 1 vrf MGMT
+R3(config-router)#network 0.0.0.0 0.0.0.0 area 0
+R3(config-router)#exit
+R3(config)#router ospf 2 vrf PROD
+R3(config-router)#network 0.0.0.0 0.0.0.0 area 0
+R3(config-router)#end  
+
+CCI: CCI-001414
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip access-group TRAFFIC_FROM_NOC in</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip access-group TRAFFIC_TO_NOC in</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>cea6d3c0-68ff-4814-832c-cfe20a477702</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000440 - OOB</RuleName>
+          <Comments>The Cisco out-of-band management (OOBM) gateway router must be configured to block any traffic destined to itself that is not sourced from the OOBM network or the Network Operations Center (NOC).</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone. It is only applicable if the OOBM gateway router is not a dedicated device to the OOBM backbone.
+
+Verify that traffic destined to itself is only sourced by the OOBM or the NOC. In the example below, the OOBM backbone network is 10.11.1.0/24, the NOC address spaces is 10.12.1.0/24, and the OOBM LAN address space at remote site connecting to the managed network is 10.13.1.0/24.
+
+Step 1: Note the inbound ACL applied to the OOBM interfaces.
+
+interface GigabitEthernet0/2
+ description OOB link to NOC
+ ip address 10.11.1.8 255.255.255.0
+ ip access-group TRAFFIC_FROM_NOC in
+!
+interface GigabitEthernet0/3
+ description link to OOBM LAN access switch
+ ip address 10.13.1.1 255.255.255.0
+ ip access-group TRAFFIC_TO_NOC in
+
+Step 2: Review the inbound ACL bound to any OOB interface connecting to the OOBM backbone and verify traffic destined to itself is only from the OOBM or NOC address space.
+
+ip access-list extended TRAFFIC_FROM_NOC
+ permit ip 10.11.1.0 0.255.255.255 host 10.11.1.8
+ permit ip 10.12.1.0 0.255.255.255 host 10.11.1.8
+ permit ip 10.11.1.0 0.255.255.255 host 10.13.1.1
+ permit ip 10.12.1.0 0.255.255.255 host 10.13.1.1
+ deny ip any host 10.11.1.8 log-input
+ deny ip any host 10.13.1.1 log-input
+ permit ip 10.11.1.0 0.0.0.255 10.13.1.0 0.0.0.255
+ permit ip 10.12.1.0 0.0.0.255 10.13.1.0 0.0.0.255
+ deny ip any any log-input
+
+Step 3: Review the inbound ACL bound to any OOBM LAN interfaces and verify traffic destined to itself is from the OOBM LAN address space.
+
+ip access-list extended TRAFFIC_TO_NOC
+ permit ip 10.13.1.0 0.255.255.255 host 10.13.1.1
+ permit ip 10.13.1.0 0.255.255.255 host 10.11.1.8
+ deny ip any host 10.13.1.1 log-input
+ deny ip any host 10.11.1.8 log-input
+ permit ip 10.13.1.0 0.255.255.255 10.11.1.0 0.0.0.255
+ permit ip 10.13.1.0 0.255.255.255 10.12.1.0 0.0.0.255
+ deny ip any any log-input
+
+If the router does not block any traffic destined to itself that is not sourced from the OOBM network or the NOC, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone. It is only applicable if the OOBM gateway router is not a dedicated device to the OOBM backbone.
+
+Step 1: Configure the ACL to only allow traffic to the route processor from the OOBM backbone and the NOC.
+
+R4(config)#ip access-list extended TRAFFIC_FROM_NOC
+R4(config-ext-nacl)#permit ip 10.11.1.0 0.255.255.255 host 10.11.1.8
+R4(config-ext-nacl)#permit ip 10.12.1.0 0.255.255.255 host 10.11.1.8
+R4(config-ext-nacl)#permit ip 10.11.1.0 0.255.255.255 host 10.13.1.1
+R4(config-ext-nacl)#permit ip 10.12.1.0 0.255.255.255 host 10.13.1.1
+R4(config-ext-nacl)#deny ip any host 10.11.1.8 log-input
+R4(config-ext-nacl)#deny ip any host 10.13.1.1 log-input
+R4(config-ext-nacl)#permit ip 10.11.1.0 0.0.0.255 10.13.1.0 0.0.0.255
+R4(config-ext-nacl)#permit ip 10.12.1.0 0.0.0.255 10.13.1.0 0.0.0.255
+R4(config-ext-nacl)#deny ip any any log-input
+
+ Step 2: Configure the ACL to only allow traffic to the route processor from the OOBM LAN.
+
+R4(config)#ip access-list extended TRAFFIC_TO_NOC
+R4(config-ext-nacl)#permit ip 10.13.1.0 0.255.255.255 host 10.13.1.1
+R4(config-ext-nacl)#permit ip 10.13.1.0 0.255.255.255 host 10.11.1.8
+R4(config-ext-nacl)#deny ip any host 10.13.1.1 log-input
+R4(config-ext-nacl)#deny ip any host 10.11.1.8 log-input
+R4(config-ext-nacl)#permit ip 10.13.1.0 0.255.255.255 10.11.1.0 0.0.0.255
+R4(config-ext-nacl)#permit ip 10.13.1.0 0.255.255.255 10.12.1.0 0.0.0.255
+R4(config-ext-nacl)#deny ip any any log-input
+R4(config-ext-nacl)#exit
+
+Step 3: Apply the ACLs configured above to the appropriate OOBM interfaces as shown in the example below.
+
+R4(config)#int g0/2
+R4(config-if)#ip access-group TRAFFIC_FROM_NOC in
+R4(config)#int g0/3
+R4(config-if)#ip access-group TRAFFIC_TO_NOC in
+R4(config-if)#end  
+
+CCI: CCI-001097
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+      </AssignedPolicyRules>
+      <Grouping>CSCO-IOS-RTR</Grouping>
+      <Comments />
+      <PolicyName>CSCO-IOS-RTR - OOB</PolicyName>
+    </Policy>
+  </AssignedPolicies>
+  <ReportStatus>Enabled</ReportStatus>
+</PolicyReport>

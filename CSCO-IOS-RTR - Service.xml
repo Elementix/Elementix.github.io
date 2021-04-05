@@ -1,0 +1,1424 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PolicyReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ID>e9c9448c-b6dc-4c31-8ce0-f5e87716225a</ID>
+  <Name>CSCO-IOS-RTR - Service</Name>
+  <Comments>Cisco IOS Router RTR Security Technical Implementation Guide: Version: 1: Release: 2: 24 JAN 2020</Comments>
+  <Group>Cisco-IOS-RTR-V1R1</Group>
+  <ShowSummaryFlag>false</ShowSummaryFlag>
+  <ShowRulesWithoutViolationFlag>true</ShowRulesWithoutViolationFlag>
+  <AssignedPolicies>
+    <Policy>
+      <NodeSelectionString>WebCriteria:&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfWebSelectionCriteria xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;WebSelectionCriteria&gt;
+    &lt;Id&gt;f2417afb-3482-4e14-ad5f-bf28dbf08b5c&lt;/Id&gt;
+    &lt;LogicalCondition /&gt;
+    &lt;SelectedColumn&gt;Vendor&lt;/SelectedColumn&gt;
+    &lt;MatchType&gt;=&lt;/MatchType&gt;
+    &lt;SelectedValue&gt;Cisco&lt;/SelectedValue&gt;
+  &lt;/WebSelectionCriteria&gt;
+&lt;/ArrayOfWebSelectionCriteria&gt;SQL:Where (Vendor = 'Cisco') </NodeSelectionString>
+      <ConfigTypes>Running</ConfigTypes>
+      <AssignedPolicyRules>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip msdp peer x.1.28.2 remote-as nn</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip msdp sa-filter in 10.1.28.2 list MSDP_SA_FILTER</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip msdp sa-limit X.1.28.2 nnn</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>5587274a-e924-4a99-94ca-0c2ad8bf9251</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000940 - Service</RuleName>
+          <Comments>The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to limit the amount of source-active messages it accepts on a per-peer basis.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if it is configured to limit the amount of source-active messages it accepts on a per-peer basis.
+
+ip msdp peer x.1.28.2 remote-as nn
+ip msdp sa-filter in 10.1.28.2 list MSDP_SA_FILTER
+ip msdp sa-limit X.1.28.2 nnn
+
+If the router is not configured to limit the source-active messages it accepts, this is a finding.
+
+Fix Text: Configure the router to limit the amount of source-active messages it accepts from each peer.
+
+R8(config)#ip msdp sa-limit x.1.28.2 nnn  
+
+CCI: CCI-001368
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>1d69322f-dd9f-4d67-8919-129053d0ab7a</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000740 - Service</RuleName>
+          <Comments>The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if uRPF loose mode is enabled on all CE-facing interfaces.
+
+interface GigabitEthernet0/2
+ ip address x.1.12.2 255.255.255.252
+ ip access-group BLOCK_TO_CORE in
+ ip verify unicast source reachable-via any
+
+If uRPF loose mode is not enabled on all CE-facing interfaces, this is a finding.
+
+Fix Text: Configure uRPF loose mode on all CE-facing interfaces as shown in the example below.
+
+R2(config)#int R4(config)#int g0/2
+R2(config-if)#ip verify unicast source reachable-via any
+R2(config-if)#end  
+
+CCI: CCI-001097
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>ip verify unicast source reachable-via any</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>class-map match-all CoPP_CRITICAL</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>match access-group name CoPP_CRITICAL</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>class-map match-any CoPP_IMPORTANT</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>match access-group name CoPP_IMPORTANT</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>match protocol arp</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>class-map match-all CoPP_NORMAL</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>match access-group name CoPP_NORMAL</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>class-map match-any CoPP_UNDESIRABLE</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>match access-group name CoPP_UNDESIRABLE</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>class-map match-all CoPP_DEFAULT</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>match access-group name CoPP_DEFAULT</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>ed3bc54a-48d3-4ad5-9adf-204da4654a7d</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000120 - Service</RuleName>
+          <Comments>The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement. 
+
+Step 1: Verify traffic types have been classified based on importance levels. The following is an example configuration: 
+
+class-map match-all CoPP_CRITICAL 
+match access-group name CoPP_CRITICAL 
+class-map match-any CoPP_IMPORTANT 
+match access-group name CoPP_IMPORTANT 
+match protocol arp 
+class-map match-all CoPP_NORMAL 
+match access-group name CoPP_NORMAL 
+class-map match-any CoPP_UNDESIRABLE 
+match access-group name CoPP_UNDESIRABLE 
+class-map match-all CoPP_DEFAULT 
+match access-group name CoPP_DEFAULT 
+
+Step 2: Review the Access Control Lists(ACLs) referenced by the class maps to determine if the traffic is being classified appropriately. The following is an example configuration: 
+
+ip access-list extended CoPP_CRITICAL 
+remark our control plane adjacencies are critical 
+permit ospf host [OSPF neighbor A] any 
+permit ospf host [OSPF neighbor B] any 
+permit pim host [PIM neighbor A] any 
+permit pim host [PIM neighbor B] any 
+permit pim host [RP addr] any 
+permit igmp any 224.0.0.0 15.255.255.255 
+permit tcp host [BGP neighbor] eq bgp host [local BGP addr] 
+permit tcp host [BGP neighbor] host [local BGP addr] eq bgp 
+deny ip any any 
+
+ip access-list extended CoPP_IMPORTANT 
+permit tcp host [TACACS server] eq tacacs any 
+permit tcp [management subnet] 0.0.0.255 any eq 22 
+permit udp host [SNMP manager] any eq snmp 
+permit udp host [NTP server] eq ntp any 
+deny ip any any 
+
+ip access-list extended CoPP_NORMAL 
+remark we will want to rate limit ICMP traffic 
+permit icmp any any echo 
+permit icmp any any echo-reply 
+permit icmp any any time-exceeded 
+permit icmp any any unreachable 
+deny ip any any 
+
+ip access-list extended CoPP_UNDESIRABLE 
+remark other management plane traffic that should not be received 
+permit udp any any eq ntp 
+permit udp any any eq snmp
+permit tcp any any eq 22 
+permit tcp any any eq 23 
+remark other control plane traffic not configured on router 
+permit eigrp any any 
+permit udp any any eq rip 
+deny ip any any 
+
+ip access-list extended CoPP_DEFAULT 
+permit ip any any 
+
+Note: Explicitly defining undesirable traffic with ACL entries enables the network operator to collect statistics. Excessive ARP packets can potentially monopolize Route Processor resources, starving other important processes. Currently, ARP is the only Layer 2 protocol that can be specifically classified using the match protocol command. 
+
+Step 3: Review the policy-map to determine if the traffic is being policed appropriately for each classification. The following is an example configuration: 
+
+policy-map CONTROL_PLANE_POLICY 
+class CoPP_CRITICAL 
+police 512000 8000 conform-action transmit exceed-action transmit 
+class CoPP_IMPORTANT 
+police 256000 4000 conform-action transmit exceed-action drop 
+class CoPP_NORMAL 
+police 128000 2000 conform-action transmit exceed-action drop 
+class CoPP_UNDESIRABLE 
+police 8000 1000 conform-action drop exceed-action drop 
+class CoPP_DEFAULT
+police 64000 1000 conform-action transmit exceed-action drop 
+
+Step 4: Verify that the CoPP policy is enabled. The following is an example configuration: 
+
+control-plane 
+service-policy input CONTROL_PLANE_POLICY 
+
+Note: Control Plane Protection (CPPr) can be used to filter as well as police control plane traffic destined to the RP. CPPr is very similar to CoPP and has the ability to filter and police traffic using finer granularity by dividing the aggregate control plane into three separate categories: (1) host, (2) transit, and (3) CEF-exception. Hence, a separate policy-map could be configured for each traffic category.
+
+If the Cisco router is not configured to protect against known types of DoS attacks by employing organization-defined security safeguards, this is a finding.
+
+Fix Text: Configure the Cisco router to protect against known types of DoS attacks on the route processor. Implementing a CoPP policy as shown in the example below is a best practice method.
+
+Step 1: Configure ACLs specific traffic types.
+
+R1(config)#ip access-list extended CoPP_CRITICAL
+R1(config-ext-nacl)#remark our control plane adjacencies are critical
+R1(config-ext-nacl)#permit ospf host x.x.x.x any
+R1(config-ext-nacl)#permit ospf host x.x.x.x any
+R1(config-ext-nacl)#permit pim host x.x.x.x any
+R1(config-ext-nacl)#permit pim host x.x.x.x any
+R1(config-ext-nacl)#permit igmp any 224.0.0.0 15.255.255.255
+R1(config-ext-nacl)#permit tcp host x.x.x.x eq bgp host x.x.x.x
+R1(config-ext-nacl)#deny ip any any
+R1(config-ext-nacl)#exit
+
+R1(config)#ip access-list extended CoPP_IMPORTANT
+R1(config-ext-nacl)#permit tcp host x.x.x.x eq tacacs any
+R1(config-ext-nacl)#permit tcp x.x.x.x 0.0.0.255 any eq 22
+R1(config-ext-nacl)#permit udp host x.x.x.x any eq snmp
+R1(config-ext-nacl)#permit udp host x.x.x.x eq ntp any
+R1(config-ext-nacl)#deny ip any any
+R1(config-ext-nacl)#exit
+
+R1(config)#ip access-list extended CoPP_NORMAL
+R1(config-ext-nacl)#remark we will want to rate limit ICMP traffic
+R1(config-ext-nacl)#permit icmp any any echo
+R1(config-ext-nacl)#permit icmp any any echo-reply
+R1(config-ext-nacl)#permit icmp any any time-exceeded
+R1(config-ext-nacl)#permit icmp any any unreachable
+R1(config-ext-nacl)#deny ip any any
+R1(config-ext-nacl)#exit
+
+R1(config)#ip access-list extended CoPP_UNDESIRABLE
+R1(config-ext-nacl)#remark management plane traffic that should not be received
+R1(config-ext-nacl)#permit udp any any eq ntp
+R1(config-ext-nacl)#permit udp any any eq snmp
+R1(config-ext-nacl)#permit tcp any any eq 22
+R1(config-ext-nacl)#permit tcp any any eq 23
+R1(config-ext-nacl)#remark control plane traffic not configured on router
+R1(config-ext-nacl)#permit eigrp any any
+R1(config-ext-nacl)#permit udp any any eq rip
+R1(config-ext-nacl)#deny ip any any
+R1(config-ext-nacl)#exit
+R1(config)#ip access-list extended CoPP_DEFAULT
+R1(config-ext-nacl)#permit ip any any
+R1(config-ext-nacl)#exit
+
+Step 2: Configure class maps referencing each of the ACLs
+
+R1(config)#class-map match-all CoPP_CRITICAL
+R1(config-cmap)#match access-group name CoPP_CRITICAL
+R1(config-cmap)#class-map match-any CoPP_IMPORTANT
+R1(config-cmap)#match access-group name CoPP_IMPORTANT
+R1(config-cmap)#match protocol arp
+R1(config-cmap)#class-map match-all CoPP_NORMAL
+R1(config-cmap)#match access-group name CoPP_NORMAL
+R1(config-cmap)#class-map match-any CoPP_UNDESIRABLE
+R1(config-cmap)#match access-group name CoPP_UNDESIRABLE
+R1(config-cmap)#class-map match-all CoPP_DEFAULT
+R1(config-cmap)#match access-group name CoPP_DEFAULT
+R1(config-cmap)#exit
+
+Step 3: Configure a policy map referencing the configured class maps and apply appropriate bandwidth allowance and policing attributes.
+
+R1(config)#policy-map CONTROL_PLANE_POLICY
+R1(config-pmap)#class CoPP_CRITICAL
+R1(config-pmap-c)#police 512000 8000 conform-action transmit exceed-action transmit
+R1(config-pmap-c-police)#class CoPP_IMPORTANT
+R1(config-pmap-c)#police 256000 4000 conform-action transmit exceed-action drop
+R1(config-pmap-c-police)#class CoPP_NORMAL
+R1(config-pmap-c)#police 128000 2000 conform-action transmit exceed-action drop
+R1(config-pmap-c-police)#class CoPP_UNDESIRABLE
+R1(config-pmap-c)#police 8000 1000 conform-action drop exceed-action drop
+R1(config-pmap-c-police)#class CoPP_DEFAULT
+R1(config-pmap-c)#police 64000 1000 conform-action transmit exceed-action drop
+R1(config-pmap-c-police)#exit
+R1(config-pmap-c)#exit
+R1(config-pmap)#exit
+
+Step 4: Apply the policy map to the control plane.
+
+R1(config)#control-plane
+R1(config-cp)#service-policy input CONTROL_PLANE_POLICY
+R1(config-cp)#end  
+
+CCI: CCI-002385
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>mpls ldp neighbor 10.1.1.2 password xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>mpls label protocol ldp</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>f5a0fef4-95e3-47ba-8310-468fa2c83c4d</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000660 - Service</RuleName>
+          <Comments>The Cisco PE router providing MPLS Layer 2 Virtual Private Network (L2VPN) services must be configured to authenticate targeted Label Distribution Protocol (LDP) sessions used to exchange virtual circuit (VC) information using a FIPS-approved message authentication code algorithm.
+</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement; hence, it is a finding. However, the severity level can be mitigated to a category 3 if the router is configured to authenticate targeted LDP sessions using MD5 as shown in the configuration example below.
+
+mpls ldp neighbor 10.1.1.2 password xxxxxxx
+mpls label protocol ldp
+
+If the router is not configured to authenticate targeted LDP sessions using MD5, the finding will remain as a category 2.
+
+Fix Text: The severity level can be downgraded to a category 3 if the router is configured to authenticate targeted LDP sessions using MD5 as shown in the example below.
+
+R5(config)#mpls ldp neighbor 10.1.1.2 password xxxxxxxx  
+
+CCI: CCI-001958
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>6a84a00a-20a7-48c9-b7c6-4ab926bf6bf0</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000080 - Service</RuleName>
+          <Comments>The Cisco router must not be configured to have any feature enabled that calls home to the vendor.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if the call home service is enabled as shown in the example below.
+
+call-home
+ contact-email-addr username@example.com
+ phone-number "+1-800-555-4567"
+ customer-id "Customer1234"
+ contract-id "Company1234"
+
+If the call home feature is enabled, this is a finding.
+
+Fix Text: Disable the call home feature as shown below.
+
+R5(config)#no call-home  
+
+CCI: CCI-002403
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>call-home</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>3370551b-03af-44fa-a53e-6b9276357c40</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000670 - Service</RuleName>
+          <Comments>The Cisco PE router providing MPLS Virtual Private Wire Service (VPWS) must be configured to have the appropriate virtual circuit identification (VC ID) for each attachment circuit.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Verify that the correct and unique VCID has been configured for the appropriate attachment circuit. In the example below GigabitEthernet0/1 is the CE-facing interface that is configured for VPWS with the VCID of 55.
+
+interface GigabitEthernet0/1
+ xconnect x.2.2.12 55 encapsulation mpls
+
+If the correct VC ID has not been configured on both routers, this is a finding.
+
+Fix Text: Assign globally unique VC IDs for each virtual circuit and configure the attachment circuits with the appropriate VC ID. 
+
+R5(config)#int g0/1
+R5(config-if)#xconnect x.2.2.12 55 encapsulation mpls  
+
+CCI: CCI-000366
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>2</ErrorLevel>
+          <SimplePatternText>xconnect x.2.2.12 55 encapsulation mpls</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>8510c6e4-1f8c-43e1-be89-7ebe3ba326df</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000750 - Service</RuleName>
+          <Comments>The Cisco PE router must be configured to drop all packets with any IP options.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if it will drop all packets with IP options as shown below.
+
+ip options drop
+
+If the router is not configured to drop all packets with IP options, this is a finding.
+
+Fix Text: Configure the router to drop all packets with IP options as shown below.
+
+R4(config)#ip options drop  
+
+CCI: CCI-002403
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>ip options drop</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>02ea5693-7f95-43d3-ab24-8053023bed77</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000910 - Service</RuleName>
+          <Comments>The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to authenticate all received MSDP packets.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if received MSDP packets are authenticated.
+
+ip msdp peer x.1.28.8 remote-as 8
+ip msdp password peer x.1.28.8 xxxxxxxxxxxx
+
+If the router does not require MSDP authentication, this is a finding.
+
+Fix Text: Configure the router to authenticate MSDP messages as shown in the following example:
+
+R2(config)#ip msdp password peer x.1.28.8 xxxxxxxxxxxx  
+
+CCI: CCI-001958
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>ip msdp password peer x.1.28.8 xxxxxxxxxxxx</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>Auto-configuration example</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>version 15.0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>service config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>boot-start-marker</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>boot network tftp://x.x.x.x/R5-config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>boot-end-marker</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>CNS Zero-Touch Example</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>OR</Condition>
+              <Pattern>cns trusted-server config x.x.x.x</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket>(</BeginBracket>
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>cns trusted-server image x.x.x.x</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>cns config initial x.x.x.x 80</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>cns exec 80</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket>)</EndBracket>
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>cns image</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>93e6898f-99bb-40f2-98f2-85e121403ade</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000090 - Service</RuleName>
+          <Comments>The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the device configuration to determine if auto-configuration or zero-touch deployment via Cisco Networking Services (CNS) is enabled. 
+
+Auto-configuration example
+
+version 15.0
+service config
+…
+…
+…
+boot-start-marker
+boot network tftp://x.x.x.x/R5-config
+boot-end-marker
+
+CNS Zero-Touch Example
+
+cns trusted-server config x.x.x.x
+cns trusted-server image x.x.x.x
+cns config initial x.x.x.x 80
+cns exec 80
+cns image
+
+If a configuration auto-loading feature or zero-touch deployment feature is enabled, this is a finding. 
+
+Note: Auto-configuration or zero-touch deployment features can be enabled when the router is offline for the purpose of image loading or building out the configuration. In addition, this would not be applicable to the provisioning of virtual routers via a software-defined network (SDN) orchestration system.
+
+Fix Text: Disable configuration auto-loading if enabled using the following commands.
+
+R8(config)#no boot network
+R8(config)#no service config
+
+Disable CNS zero-touch deployment if enabled as shown in the example below.
+R2(config)#no cns config initial
+R2(config)#no cns exec
+R2(config)#no cns image
+R2(config)#no cns trusted-server config x.x.x.x
+R2(config)#no cns trusted-server image x.x.x.x  
+
+CCI: CCI-002385
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip msdp peer 10.1.28.8 remote-as 8
+</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip msdp sa-filter out 10.1.28.8 list OUTBOUND_MSDP_SA_FILTER</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>99928670-7d93-4311-a031-a52536d36b24</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000930 - Service</RuleName>
+          <Comments>The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter source-active multicast advertisements to external MSDP peers to avoid global visibility of local-only multicast sources and groups.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if there is export policy to block local source-active multicast advertisements.
+
+Step 1: Verify that an outbound source-active filter is bound to each MSDP peer as shown in the example below.
+
+ip msdp peer 10.1.28.8 remote-as 8
+ip msdp sa-filter out 10.1.28.8 list OUTBOUND_MSDP_SA_FILTER
+
+Step 2: Review the access lists referenced by the source-active filters and verify that MSDP source-active messages being sent to MSDP peers do not leak advertisements that are local.
+
+ip access-list extended OUTBOUND_MSDP_SA_FILTER
+ deny ip 10.0.0.0 0.255.255.255 any
+ permit ip any any
+
+If the router is not configured with an export policy to filter local source-active multicast advertisements, this is a finding.
+
+Fix Text: Configure the router with an export policy avoid global visibility of local multicast (S, G) states. The example below will prevent exporting multicast active sources belonging to the private network.
+
+R8(config)#ip access-list extended OUTBOUND_MSDP_SA_FILTER
+R8(config-ext-nacl)#deny ip 10.0.0.0 0.255.255.255 any
+R8(config-ext-nacl)#permit ip any any
+R8(config-ext-nacl)#exit
+R8(config)#ip msdp sa-filter in x.1.28.2 list OUTBOUND_MSDP_SA_FILTER  
+
+CCI: CCI-001368
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>b092ccb6-6773-4d68-8ab0-bfcc6d3dc675</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000610 - Service</RuleName>
+          <Comments>The MPLS router with RSVP-TE enabled must be configured with message pacing to adjust maximum burst and maximum number of RSVP messages to an output queue based on the link speed and input queue size of adjacent core routers.
+</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine RSVP messages are rate limited.
+
+Step 1: Determine if MPLS TE is enabled globally and at least one interface as shown in the example below. 
+
+mpls traffic-eng tunnels
+…
+…
+…
+interface GigabitEthernet0/2
+ ip address x.x.x.x 255.255.255.0
+ mpls traffic-eng tunnels
+ mpls ip
+
+Step 2: If MPLS TE is enabled, verify that message pacing is enabled.
+
+ip rsvp signaling rate-limit period 30 burst 9 maxsize 2100 limit 50
+
+Note: The command ip rsvp msg-pacing has been deprecated by the command ip rsvp signaling rate-limit.
+
+If the router with RSVP-TE enabled does not rate limit RSVP messages based on the link speed and input queue size of adjacent core routers, this is a finding.
+
+Fix Text: Configure the router to rate limit RSVP messages per interface as shown in the example.
+
+R2(config)#ip rsvp signaling rate-limit burst 9 maxsize 2100 period 30 limit 50  
+
+CCI: CCI-001095
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText>ip rsvp signaling rate-limit period 30 burst 9 maxsize 2100 limit 50</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>8c485e6a-1362-409c-89fe-c6e7562306f9</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000370 - Service</RuleName>
+          <Comments>The Cisco perimeter router must be configured to have Cisco Discovery Protocol (CDP) disabled on all external interfaces.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Step 1: Verify CDP is not enabled globally via the command no cdp run
+
+By default CDP is enabled globally; hence, the command cdp run will not be shown in the configuration. If CDP is enabled, proceed to step 2.
+
+Step 2: Verify CDP is not enabled on any external interface as shown in the example below.
+
+interface GigabitEthernet0/1
+ ip address x.1.23.2 255.255.255.252
+ no cdp enable
+
+Note: By default CDP is enabled on all interfaces if CDP is enabled globally.
+
+If CDP is enabled on any external interface, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone.
+
+Disable CDP on all external interfaces via no cdp enable command or disable CDP globally via no cdp run command.  
+
+CCI: CCI-002403
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText>no cdp run</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>6dfbf403-91bb-42e0-92f7-dc972d8c11ee</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000310 - Service</RuleName>
+          <Comments>The Cisco perimeter router must be configured to restrict it from accepting outbound IP packets that contain an illegitimate address in the source address field via egress filter or by enabling Unicast Reverse Path Forwarding (uRPF).</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Review the router configuration to verify uRPF or an egress ACL has been configured on all internal interfaces to restrict the router from accepting outbound IP packets that contain an illegitimate address in the source address field.
+
+uRPF example
+
+interface GigabitEthernet0/1
+ description downstream link to LAN
+ ip address 10.1.25.5 255.255.255.0
+ ip verify unicast source reachable-via rx
+
+Egress ACL example
+
+interface GigabitEthernet0/1
+ description downstream link to LAN
+ ip address 10.1.25.5 255.255.255.0
+ ip access-group EGRESS_FILTER in
+…
+…
+…
+ip access-list extended EGRESS_FILTER
+ permit udp 10.1.15.0 0.0.0.255 any eq domain
+ permit tcp 10.1.15.0 0.0.0.255 any eq ftp
+ permit tcp 10.1.15.0 0.0.0.255 any eq ftp-data
+ permit tcp 10.1.15.0 0.0.0.255 any eq www
+ permit icmp 10.1.15.0 0.0.0.255 any
+ permit icmp 10.1.15.0 0.0.0.255 any echo
+ deny ip any any
+
+If uRPF or an egress ACL to restrict the router from accepting outbound IP packets that contain an illegitimate address in the source address field has not been configured on all internal interfaces in an enclave, this is a finding.
+
+Fix Text: This requirement is not applicable for the DODIN Backbone.
+
+Configure the router to ensure that an egress ACL or uRPF is configured on internal interfaces to restrict the router from accepting any outbound IP packet that contains an illegitimate address in the source field. The example below enables uRPF.
+
+R5(config)#int g0/1
+R5(config-if)#ip verify unicast source reachable-via rx  
+
+CCI: CCI-001094
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>2</ErrorLevel>
+          <SimplePatternText>ip verify unicast source reachable-via rx</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>boot network</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip boot server</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip bootp server</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip dns server</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip identd</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip finger</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip http server</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip rcmd rcp-enable</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip rcmd rsh-enable</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>service config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>service finger</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>service tcp-small-servers</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>service udp-small-servers</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>service pad</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>d956dace-bb52-402b-b5aa-dedddc2428cc</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000070 - Service</RuleName>
+          <Comments>The Cisco router must be configured to have all non-essential capabilities disabled.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to verify that the router does not have any unnecessary or non-secure services enabled. For example, the following commands should not be in the configuration:
+
+boot network
+ip boot server
+ip bootp server
+ip dns server
+ip identd
+ip finger
+ip http server
+ip rcmd rcp-enable
+ip rcmd rsh-enable
+service config
+service finger
+service tcp-small-servers
+service udp-small-servers
+service pad
+
+If any unnecessary services are enabled, this is a finding.
+
+Fix Text: Disable the following services if enabled as shown in the example below.
+
+R2(config)#no boot network
+R2(config)#no ip boot server
+R2(config)#no ip bootp server
+R2(config)#no ip dns server
+R2(config)#no ip identd
+R2(config)#no ip finger
+R2(config)#no ip http server
+R2(config)#no ip rcmd rcp-enable
+R2(config)#no ip rcmd rsh-enable
+R2(config)#no service config
+R2(config)#no service finger
+R2(config)#no service tcp-small-servers
+R2(config)#no service udp-small-servers
+R2(config)#no service pad  
+
+CCI: CCI-000381
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>e5ad1da8-6892-4565-bf17-ea08912dccf5</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000620 - Service</RuleName>
+          <Comments>The Cisco MPLS router must be configured to have TTL Propagation disabled.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to verify that TTL propagation is disabled as shown in the example below.
+
+no mpls ip propagate-ttl
+
+If the MPLS router is not configured to disable TTL propagation, this is a finding.
+
+Fix Text: Configure the MPLS router to disable TTL propagation as shown in the example below.
+
+R5(config)#no mpls ip propagate-ttl  
+
+CCI: CCI-000366
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>no mpls ip propagate-ttl</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>77b9080b-8152-4a7a-9c72-ef97c8131364</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000360 - Service</RuleName>
+          <Comments>The Cisco perimeter router must be configured to have Link Layer Discovery Protocol (LLDP) disabled on all external interfaces.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+This requirement is not applicable for the DODIN Backbone.
+
+Step 1: Verify LLDP is not enabled globally via the command 
+
+lldp run
+
+By default LLDP is not enabled globally. If LLDP is enabled, proceed to step 2.
+
+Step 2: Verify LLDP is not enabled on any external interface as shown in the example below.
+
+interface GigabitEthernet0/1
+ ip address x.1.12.1 255.255.255.252
+ no lldp transmit
+
+Note: LLDP is enabled by default on all interfaces once it is enabled globally; hence the command lldp transmit will not be visible on the interface configuration.
+
+If LLDP transmit is enabled on any external interface, this is a finding.
+
+Fix Text: Disable LLDP transmit on all external interfaces as shown in the example below.
+
+R5(config)#int g0/1
+R5(config-if)#no lldp transmit  
+
+CCI: CCI-002403
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>lldp run</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>9e851c0f-1685-441c-99ae-f86bb42d2b02</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000950 - Service</RuleName>
+          <Comments />
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Verify that the loopback interface is used as the source address for all MSDP packets generated by the router.
+
+ip msdp peer x.44.2.34 connect-source Loopback12 remote-as nn
+
+If the router does not use its loopback address as the source address when originating MSDP traffic, this is a finding.
+
+Fix Text: Configure the router to use its loopback address is used as the source address when sending MSDP packets.
+
+R2(config)#ip msdp peer x.44.2.34 connect-source lo12 remote-as nn  
+
+CCI: CCI-000366
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText>ip msdp peer x.44.2.34 connect-source Loopback12 remote-as nn</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>77b06f67-fea0-45da-8bd2-fa6d9883b472</RuleId>
+          <RuleName>CSCO-IOS-RTR-CISC-RT-000150 - Service</RuleName>
+          <Comments>The Cisco router must be configured to have Gratuitous ARP disabled on all external interfaces.</Comments>
+          <Grouping>CSCO-IOS-RTR</Grouping>
+          <RemediateScript>Check Content:  
+Review the configuration to determine if gratuitous ARP is disabled. The following command should not be found in the router configuration:
+
+ip gratuitous-arps
+
+Note: With Cisco IOS, Gratuitous ARP is enabled and disabled globally.
+
+If gratuitous ARP is enabled on any external interface, this is a finding.
+
+Fix Text: Disable gratuitous ARP as shown in the example below:
+
+R5(config)#no ip gratuitous-arps  
+
+CCI: CCI-002385
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>no ip gratuitous-arps</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+      </AssignedPolicyRules>
+      <Grouping>CSCO-IOS-RTR</Grouping>
+      <Comments />
+      <PolicyName>CSCO-IOS-RTR - Service</PolicyName>
+    </Policy>
+  </AssignedPolicies>
+  <ReportStatus>Enabled</ReportStatus>
+</PolicyReport>

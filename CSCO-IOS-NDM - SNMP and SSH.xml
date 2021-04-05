@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PolicyReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ID>487fe40c-a129-4bc5-98d0-c245a7d82aff</ID>
+  <Name>CSCO-IOS-NDM - SNMP and SSH</Name>
+  <Comments>Cisco IOS Router NDM Security Technical Implementation Guide: Version: 1: Release: 2:  24 Jan 2020</Comments>
+  <Group>Cisco-IOS-NDM-V1R1</Group>
+  <ShowSummaryFlag>false</ShowSummaryFlag>
+  <ShowRulesWithoutViolationFlag>true</ShowRulesWithoutViolationFlag>
+  <AssignedPolicies>
+    <Policy>
+      <NodeSelectionString>WebCriteria:&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfWebSelectionCriteria xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;WebSelectionCriteria&gt;
+    &lt;Id&gt;a34315c5-e548-4912-bbca-42faaa1cdb3b&lt;/Id&gt;
+    &lt;LogicalCondition /&gt;
+    &lt;SelectedColumn&gt;Vendor&lt;/SelectedColumn&gt;
+    &lt;MatchType&gt;=&lt;/MatchType&gt;
+    &lt;SelectedValue&gt;Cisco&lt;/SelectedValue&gt;
+  &lt;/WebSelectionCriteria&gt;
+&lt;/ArrayOfWebSelectionCriteria&gt;SQL:Where (Vendor = 'Cisco') </NodeSelectionString>
+      <ConfigTypes>Running</ConfigTypes>
+      <AssignedPolicyRules>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>snmp-server group V3GROUP v3 priv read V3READ write V3WRITE</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server view V3READ iso included</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server view V3WRITE iso included</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server host x.x.x.x version 3 auth V3USER</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>5a6a1e93-4e14-46f2-8211-0df7af10ca7c</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001140 - SNMP</RuleName>
+          <Comments>The Cisco router must be configured to encrypt SNMP messages using a FIPS 140-2 approved algorithm.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+snmp-server group V3GROUP v3 priv read V3READ write V3WRITE
+snmp-server view V3READ iso included
+snmp-server view V3WRITE iso included
+snmp-server host x.x.x.x version 3 auth V3USER
+
+Encryption used by the SNMP users can be viewed via the show snmp user command as shown in the example below.
+
+R4#show snmp user
+
+User name: V3USER
+Engine ID: 800000090300C2042B540000
+storage-type: nonvolatile active
+Authentication Protocol: SHA
+Privacy Protocol: AES256
+Group-name: V3GROUP
+
+If the Cisco router is not configured to encrypt SNMP messages using a FIPS 140-2 approved algorithm, this is a finding.
+
+Fix Text: Configure the Cisco router to encrypt SNMP messages using a FIPS 140-2 approved algorithm as shown in the example below.
+
+R4(config)#snmp-server group V3GROUP v3 priv read V3READ write V3WRITE
+R4(config)#snmp-server user V3USER V3GROUP v3 auth sha xxxxxx priv aes 256 xxxxxx  
+
+CCI: CCI-000068
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps cpu threshold</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec cryptomap add</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec cryptomap delete</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec cryptomap attach</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec cryptomap detach</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec tunnel start</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec tunnel stop</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server host x.x.x.x version 3 auth xxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>f6afab25-7fbf-40e6-afd2-513f47006e7c</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000790 - SNMP</RuleName>
+          <Comments>The Cisco router must activate a system alert message, send an alarm, and/or automatically shut down when a component failure is detected.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to send SNMP traps and notifications to the SNMP manager for the purpose of sending alarms and notifying appropriate personnel as required by specific events.
+
+The SNMP configuration should contain commands similar to the example below.
+
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps vrrp
+snmp-server enable traps eigrp
+snmp-server enable traps cpu threshold
+…
+…
+…
+snmp-server enable traps ipsec cryptomap add
+snmp-server enable traps ipsec cryptomap delete
+snmp-server enable traps ipsec cryptomap attach
+snmp-server enable traps ipsec cryptomap detach
+snmp-server enable traps ipsec tunnel start
+snmp-server enable traps ipsec tunnel stop
+snmp-server host x.x.x.x version 3 auth xxxxx
+
+Note: The above is a subset of all the possible traps that can be enabled. Selective traps can be enabled as required.
+
+If the router is not configured to send traps to the SNMP manager, this is a finding.
+
+Fix Text: Configure the router to send SNMP traps to the SNMP manager as shown in the example below.
+
+R4(config)#snmp-server enable traps 
+R4(config)#snmp-server host x.x.x.x version 3 auth xxxxx
+
+The above command will enable all possible traps and is not necessary—selective set of traps can be enabled as require.  
+
+CCI: CCI-000366
+
+
+CCI: CCI-001328
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip ssh version 2</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip ssh server algorithm encryption aes128-cbc aes128-ctr aes192-cbc aes192-ctr</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip http secure-server</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip http secure-ciphersuite aes-128-cbc-sha</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip http secure-client-auth</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip http secure-trustpoint CA_XXX</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>6b093d19-ec21-4361-8a6c-55b88c232a5b</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001210 - SSH</RuleName>
+          <Comments>The Cisco router must be configured to implement cryptographic mechanisms to protect the confidentiality of remote maintenance sessions.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement.
+
+SSH Example
+
+ip ssh version 2
+ip ssh server algorithm encryption aes128-cbc aes128-ctr aes192-cbc aes192-ctr
+
+HTTPS Example
+
+ip http secure-server
+ip http secure-ciphersuite aes-128-cbc-sha 
+ip http secure-client-auth
+ip http secure-trustpoint CA_XXX
+
+If the router is not configured to implement cryptographic mechanisms to protect the confidentiality of remote maintenance sessions using a FIPS 140-2 approved algorithm, this is a finding.
+
+Fix Text: Configure the Cisco router to implement cryptographic mechanisms to protect the confidentiality of remote maintenance sessions using a FIPS 140-2 approved algorithm as shown in the examples below.
+
+SSH Example
+
+R1(config)#ip ssh server algorithm encryption aes128-cbc aes128-ctr aes192-cbc aes192-ctr
+
+HTTPS Example
+
+R2(config)#ip http secure-ciphersuite aes-128-cbc-sha  
+
+CCI: CCI-003123
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>2</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps vrrp</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps eigrp</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps cpu threshold</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>913b97b7-ee4a-49f6-b798-5ed8e1dde92b</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001400 - SNMP</RuleName>
+          <Comments>The Cisco router must employ automated mechanisms to detect the addition of unauthorized components or devices.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to send SNMP traps and notifications to the SNMP manager for the purpose of sending alarms and notifying appropriate personnel as required by specific events.
+
+The SNMP configuration should contain commands similar to the example below.
+
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps vrrp
+snmp-server enable traps eigrp
+snmp-server enable traps cpu threshold
+…
+…
+…
+snmp-server enable traps ipsec cryptomap add
+snmp-server enable traps ipsec cryptomap delete
+snmp-server enable traps ipsec cryptomap attach
+snmp-server enable traps ipsec cryptomap detach
+snmp-server enable traps ipsec tunnel start
+snmp-server enable traps ipsec tunnel stop
+snmp-server host x.x.x.x version 3 auth xxxxx
+
+Note: The above is a subset of all the possible traps that can be enabled. Selective traps can be enabled as required.
+
+If the router is not configured to send traps to the SNMP manager, this is a finding.
+
+Fix Text: Configure the router to send SNMP traps to the SNMP manager as shown in the example below.
+
+R4(config)#snmp-server enable traps 
+R4(config)#snmp-server host x.x.x.x version 3 auth xxxxx
+
+The above command will enable all possible traps and is not necessary—selective set of traps can be enabled as required.  
+
+CCI: CCI-000366
+
+
+CCI: CCI-000416
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip ssh version 2</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip ssh server algorithm encryption aes128-cbc aes192-cbc aes192-ctr</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>d5ef61c8-ba5a-4d2a-9593-81661f60bc74</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000530 - SSH</RuleName>
+          <Comments>The Cisco router must be configured to implement replay-resistant authentication mechanisms for network access to privileged accounts.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that SSH is configured to use FIPS-140-2 compliant HMACs as shown in the example below.
+
+ip ssh version 2
+ip ssh server algorithm encryption aes128-cbc aes192-cbc aes192-ctr
+
+Note: An SSH configuration enables a server and client to authorize the negotiation of only those algorithms that are configured from the allowed list. If a remote party tries to negotiate using an algorithm that is not part of the allowed list, the request is rejected and the session is not established. 
+
+If the router is not configured to implement replay-resistant authentication mechanisms for network access to privileged accounts, this is a finding.
+
+Fix Text: Configure SSH to use FIPS-140-2 compliant HMACs as shown in the example below.
+
+R1(config)#ip ssh version 2
+R1(config)#ip ssh server algorithm encryption aes128-cbc aes192-cbc aes192-ctr
+
+Note: An SSH configuration enables a server and client to authorize the negotiation of only those algorithms that are configured from the allowed list. If a user tries to negotiate using an algorithm that is not part of the allowed list, the request is rejected and the session is not established.  
+
+CCI: CCI-001941
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>snmp-server group V3GROUP v3 auth read V3READ write V3WRITE </Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server view V3READ iso included</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server view V3WRITE iso included</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server host x.x.x.x version 3 auth V3USER</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>fee7acc4-40f6-44b0-8122-d805f997022e</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001130 - SNMP</RuleName>
+          <Comments>The Cisco router must be configured to authenticate SNMP messages using a FIPS-validated Keyed-Hash Message Authentication Code (HMAC).</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+snmp-server group V3GROUP v3 auth read V3READ write V3WRITE 
+snmp-server view V3READ iso included
+snmp-server view V3WRITE iso included
+snmp-server host x.x.x.x version 3 auth V3USER
+
+Authentication used by the SNMP users can be viewed via the show snmp user command as shown in the example below.
+
+R4#show snmp user
+
+User name: V3USER
+Engine ID: 800000090300C2042B540000
+storage-type: nonvolatile active
+Authentication Protocol: SHA
+Privacy Protocol: None
+Group-name: V3GROUP
+
+If the Cisco router is not configured to authenticate SNMP messages using a FIPS-validated HMAC, this is a finding.
+
+Fix Text: Configure the Cisco router to authenticate SNMP messages as shown in the example below.
+
+R4(config)#snmp-server group V3GROUP v3 auth read V3READ write V3WRITE
+R4(config)#snmp-server user V3USER V3GROUP v3 auth sha xxxxxxx
+R4(config)#snmp-server view V3READ iso included
+R4(config)#snmp-server view V3WRITE iso included
+R4(config)#snmp-server host x.x.x.x version 3 auth V3USER  
+
+CCI: CCI-001967
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip ssh version 2</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip ssh server algorithm mac hmac-sha1-96</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip http secure-server</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip http secure-ciphersuite aes-128-cbc-sha</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip http secure-client-auth</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip http secure-trustpoint CA_XXX</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>d6c9c199-8929-4c65-8b00-e8f378f5869e</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001200 - SSH</RuleName>
+          <Comments>The Cisco router must be configured to use FIPS-validated Keyed-Hash Message Authentication Code (HMAC) to protect the integrity of remote maintenance sessions.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+SSH Example
+
+ip ssh version 2
+ip ssh server algorithm mac hmac-sha1-96
+
+HTTPS Example
+
+ip http secure-server
+ip http secure-ciphersuite aes-128-cbc-sha 
+ip http secure-client-auth
+ip http secure-trustpoint CA_XXX
+
+If the Cisco router is not configured to use FIPS-validated HMAC to protect the integrity of remote maintenance sessions, this is a finding.
+
+Fix Text: The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured. 
+
+Configure SSH and HTTPs to use FIPS-validated HMAC for remote maintenance sessions as shown in the following examples:
+
+SSH Example
+
+R1(config)#ip ssh version 2
+R1(config)#ip ssh server algorithm mac hmac-sha1-96
+
+HTTPS Example
+
+R2(config)#ip http secure-ciphersuite aes-128-cbc-sha  
+
+CCI: CCI-002890
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>2</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps vrrp</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps eigrp</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps cpu threshold</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec cryptomap add</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec cryptomap delete</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec cryptomap attach</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec cryptomap detach</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec tunnel start</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server enable traps ipsec tunnel stop</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>snmp-server host x.x.x.x version 3 auth xxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>d515c008-78ca-4091-821b-fdfd4be1c998</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001460 - SNMP</RuleName>
+          <Comments>The Cisco router must be configured to send SNMP traps and notifications to the SNMP manager for the purpose of sending alarms and notifying appropriate personnel as required by specific events.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Verify that the router is configured to send traps to the SNMP manager. The SNMP configuration should contain commands similar to the example below.
+
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps vrrp
+snmp-server enable traps eigrp
+snmp-server enable traps cpu threshold
+…
+…
+…
+snmp-server enable traps ipsec cryptomap add
+snmp-server enable traps ipsec cryptomap delete
+snmp-server enable traps ipsec cryptomap attach
+snmp-server enable traps ipsec cryptomap detach
+snmp-server enable traps ipsec tunnel start
+snmp-server enable traps ipsec tunnel stop
+snmp-server host x.x.x.x version 3 auth xxxxx
+
+Note: The above is a subset of all the possible traps that can be enabled. Selective traps can be enabled as required.
+
+If the router is not configured to send traps to the SNMP manager, this is a finding.
+
+Fix Text: Configure the router to send SNMP traps to the SNMP manager.
+
+R4(config)#snmp-server enable traps 
+R4(config)#snmp-server host x.x.x.x version 3 auth xxxxx
+
+The above command will enable all possible traps and is not necessary—selective set of traps can be enabled as required.  
+
+CCI: CCI-000366
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+      </AssignedPolicyRules>
+      <Grouping>CSCO-IOS-NDM</Grouping>
+      <Comments />
+      <PolicyName>CSCO-IOS-NDM - SNMP and SSH</PolicyName>
+    </Policy>
+  </AssignedPolicies>
+  <ReportStatus>Enabled</ReportStatus>
+</PolicyReport>

@@ -1,0 +1,1572 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PolicyReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ID>f44dd365-a1b0-4a78-b6c9-8dbc03795e8f</ID>
+  <Name>CSCO-IOS-NDM - Logging</Name>
+  <Comments>Cisco IOS Router NDM Security Technical Implementation Guide: Version: 1: Release: 2:  24 Jan 2020</Comments>
+  <Group>Cisco-IOS-NDM-V1R1</Group>
+  <ShowSummaryFlag>false</ShowSummaryFlag>
+  <ShowRulesWithoutViolationFlag>true</ShowRulesWithoutViolationFlag>
+  <AssignedPolicies>
+    <Policy>
+      <NodeSelectionString>WebCriteria:&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfWebSelectionCriteria xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;WebSelectionCriteria&gt;
+    &lt;Id&gt;f98448b4-29f3-4677-8ab0-9c977a12ae9b&lt;/Id&gt;
+    &lt;LogicalCondition /&gt;
+    &lt;SelectedColumn&gt;Vendor&lt;/SelectedColumn&gt;
+    &lt;MatchType&gt;=&lt;/MatchType&gt;
+    &lt;SelectedValue&gt;Cisco&lt;/SelectedValue&gt;
+  &lt;/WebSelectionCriteria&gt;
+&lt;/ArrayOfWebSelectionCriteria&gt;SQL:Where (Vendor = 'Cisco') </NodeSelectionString>
+      <ConfigTypes>Running</ConfigTypes>
+      <AssignedPolicyRules>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>event manager applet BACKUP_CONFIG</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>event syslog pattern "%SYS-5-CONFIG_I"</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>action 1 info type routername</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>action 2 cli command "enable"</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>action 3 cli command "copy run tftp" pattern "remote host"</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>action 4 cli command "x.x.x.x" pattern "filename"</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>action 5 cli command "$_info_routername-config"</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>action 6 syslog priority informational msg "Configuration backup was executed"</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>0e5341cb-1f11-468a-881a-0d3054d60e0b</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001410 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to back up the configuration when changes occur.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement. The example configuration below will send the configuration to a TFTP server when a configuration change occurs.
+
+event manager applet BACKUP_CONFIG
+ event syslog pattern "%SYS-5-CONFIG_I"
+ action 1 info type routername
+ action 2 cli command "enable"
+ action 3 cli command "copy run tftp" pattern "remote host"
+ action 4 cli command "x.x.x.x" pattern "filename"
+ action 5 cli command "$_info_routername-config"
+ action 6 syslog priority informational msg "Configuration backup was executed"
+
+If the Cisco router is not configured to conduct backups of the configuration when changes occur, this is a finding.
+
+Fix Text: Configure the Cisco router to send the configuration to an TFTP or FTP server when a configuration change occurs as shown in the example below.
+
+R4(config)#event manager applet BACKUP_CONFIG
+R4(config-applet)#event syslog pattern "%SYS-5-CONFIG_I"
+R4(config-applet)#action 1 cli command "enable"
+R4(config-applet)#action 2 info type routername
+R4(config-applet)#action 3 cli command "copy run tftp" pattern "remote host"
+R4(config-applet)#action 4 cli command "x.x.x.x" pattern "filename"
+R4(config-applet)#action 5 cli command "$_info_routername-config"
+R4(config-applet)#action 6 syslog priority informational msg "Configuration backup was executed"
+R4(config-applet)#end  
+
+CCI: CCI-000366
+
+
+CCI: CCI-000537
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>logging trap notifications</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging x.x.x.x</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>e74b8f83-bec7-4fa1-9aa1-1b240febb11b</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001310 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to off-load log records onto a different system than the system being audited.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+logging trap notifications
+logging x.x.x.x
+
+Note: Default for sending log messages to the syslog server is informational (level 6); hence, the command logging trap informational will not be seen in the configuration. Level of log messages sent to the syslog server can be verified using the show logging command.
+
+If the Cisco router is not configured to off-load log records onto a different system than the system being audited, this is a finding.
+
+Fix Text: Configure the Cisco router to send log records to a syslog server as shown in the example below.
+
+R4(config)#logging host x.x.x.x
+R4(config)#logging trap notifications  
+
+CCI: CCI-001851
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>logging trap notifications</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging x.x.x.x</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>dac504a8-8c8c-4a5f-9bef-23a7a2712e53</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000340 - Logging</RuleName>
+          <Comments>The Cisco router must alert the ISSO and SA (at a minimum) in the event of an audit processing failure.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to send logs to a syslog server that can send alerts to the appropriate personnel.
+
+Verify that the router is configured to send logs to a syslog server. The configuration should look similar to the example below:
+
+logging trap notifications
+logging x.x.x.x
+
+Note: Default for sending log messages to the syslog server is informational (level 6); hence, the command logging trap informational will not be seen in the configuration. Level of log messages sent to the syslog server can be verified using the show logging command.
+
+If the router is not configured to send log messages to a syslog server, this is a finding.
+
+Fix Text: Configure the router to send log messages to the syslog server as shown in the example below.
+
+R4(config)#logging host x.x.x.x
+R4(config)#logging trap notifications  
+
+CCI: CCI-000139
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>archive</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>log config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging enable</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>2125c4c9-efb2-42fd-b87a-2e9ff5438975</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000330 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to generate audit records containing the full-text recording of privileged commands.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement. The configuration example below will log all configuration changes.
+
+archive
+ log config
+ logging enable
+
+Note: Configuration changes can be viewed using the show archive log config all command.
+
+If the Cisco router is not configured to generate audit records of configuration changes, this is a finding.
+
+Fix Text: Configure the Cisco router to log all configuration changes as shown in the example below.
+
+R4(config)#archive
+R4(config-archive)#log config
+R4(config-archive-log-cfg)#logging enable
+R4(config-archive-log-cfg)#end  
+
+CCI: CCI-000135
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>cf2206d2-d146-4fff-9f42-320da78cac53</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000980 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to allocate audit record storage capacity in accordance with organization-defined audit record storage requirements.
+</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Verify that the Cisco router is configured with a logging buffer size. The configuration should look like the example below:
+
+logging buffered xxxxxxxx informational
+
+If a logging buffer size is not configured, this is a finding.
+
+If the Cisco router is not configured to allocate audit record storage capacity in accordance with organization-defined audit record storage requirements, this is a finding.
+
+Fix Text: Configure the buffer size for logging as shown in the example below.
+
+R2(config)#logging buffered xxxxxxxx informational  
+
+CCI: CCI-001849
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>logging buffered xxxxxxxx informational</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>logging trap notifications</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging x.x.x.x</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>e5fc7f7d-2aab-426e-a7a6-40cb330ba55d</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001450 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to send log data to a syslog server for the purpose of forwarding alerts to the administrators and the ISSO.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Verify that the router is configured to send logs to a syslog server. The configuration should look similar to the example below:
+
+logging trap notifications
+logging x.x.x.x
+
+Note: Default for sending log messages to the syslog server is informational (level 6); hence, the command logging trap informational will not be seen in the configuration. Level of log messages sent to the syslog server can be verified using the show logging command.
+
+If the router is not configured to send log data to the syslog server, this is a finding.
+
+Fix Text: Configure the router to send log messages to the syslog server as shown in the example below.
+
+R4(config)#logging host x.x.x.x
+R4(config)#logging trap notifications  
+
+CCI: CCI-000366
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>logging trap critical</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging x.x.x.x</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>edd9b290-0fca-4e2a-bfdc-57cab8e756ba</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001000 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to generate an alert for all audit failure events.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+logging trap critical
+logging x.x.x.x
+
+Note: The parameter "critical" can replaced with a lesser severity level (i.e., error, warning, notice, informational). Informational is the default severity level; hence, if the severity level is configured to informational, the logging trap command will not be shown in the configuration.
+
+If the Cisco router is not configured to generate an alert for all audit failure events, this is a finding.
+
+Fix Text: Configure the Cisco router to send critical to emergency log messages to the syslog server as shown in the example below.
+
+4(config)#logging host x.x.x.x
+R4(config)#logging trap critical
+
+Note: The parameter "critical" can replaced with a lesser severity level (i.e., error, warning, notice, informational).  
+
+CCI: CCI-001858
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>logging trap notifications</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging x.x.x.x</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>c86906b4-dcd2-4dc7-99d4-64ca2365201d</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001430 - Logging</RuleName>
+          <Comments>The Cisco router must employ automated mechanisms to assist in the tracking of security incidents.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to send logs to a syslog server that can be used to assist in the tracking of security incidents.
+
+Verify that the router is configured to send logs to a syslog server. The configuration should look similar to the example below:
+
+logging trap notifications
+logging x.x.x.x
+
+Note: Default for sending log messages to the syslog server is informational (level 6); hence, the command logging trap informational will not be seen in the configuration. Level of log messages sent to the syslog server can be verified using the show logging command.
+
+If the router is not configured to send log messages to a syslog server, this is a finding.
+
+Fix Text: Configure the router to send log messages to the syslog server as shown in the example below.
+
+R4(config)#logging host x.x.x.x
+R4(config)#logging trap notifications  
+
+CCI: CCI-000366
+
+
+CCI: CCI-000833
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>archive</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>log config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging enable</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>fd6b3d89-91bd-48cd-9b86-67c49fc720e5</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001240 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to generate log records when administrator privileges are modified.
+</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the examples below.
+
+hostname R4
+!
+!
+logging userinfo
+…
+…
+…
+archive
+ log config
+ logging enable
+
+Note: The logging userinfo command will log when the administrator increases his or her privilege level while the log config command will log all configuration changes such as changing privilege levels for certain commands.
+
+If the Cisco router is not configured to generate log records when administrator privileges are modified, this is a finding.
+
+Fix Text: Configure the Cisco router to generate log records when account privileges are modified as shown in the example below.
+
+R4(config)#logging userinfo 
+R4(config)#archive
+R4(config-archive)#log config
+R4(config-archive-log-cfg)#logging enable
+R4(config-archive-log-cfg)#end  
+
+CCI: CCI-000172
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>02275bcc-b158-45f3-ae35-6dc5273c0517</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001270 - Logging</RuleName>
+          <Comments />
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example configurations below.
+
+archive
+ log config
+ logging enable
+
+If the Cisco router is not configured to generate log records for privileged activities, this is a finding.
+
+Fix Text: Configure the Cisco router to generate log records for privileged activities as shown in the example below.
+
+R4(config)#archive
+R4(config-archive)#log config
+R4(config-archive-log-cfg)#logging enable
+R4(config-archive-log-cfg)#end  
+
+CCI: CCI-000172
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>logging enable</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>logging persistent url disk0:/logfile size 134217728 filesize 16384</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>file privilege 15</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>0e521374-a9c7-45c4-9338-798bce399a6e</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000380 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to protect audit information from unauthorized modification.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement.
+
+Step 1: If persistent logging is enabled as shown in the example below, go to step 2. Otherwise, this requirement is not applicable.
+
+logging persistent url disk0:/logfile size 134217728 filesize 16384
+
+Step 2: Verify that the router is not configured with a privilege level other than "15" to allow access to the file system as shown in the example below.
+
+file privilege 10 
+
+Note: The default privilege level required for access to the file system is "15"; hence, the command file privilege "15" will not be shown in the configuration.
+
+If the router is configured with a privilege level other than "15" to allow access to the file system, this is a finding.
+
+Fix Text: If persistent logging is enabled, configure the router to only allow administrators with privilege level "15" access to the file system as shown in the example below.
+
+R4(config)#file privilege 15  
+
+CCI: CCI-000163
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>archive</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>log config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging enable</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>a8488740-b674-4a73-8d06-7c46d2316c74</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000090 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to automatically audit account creation.
+</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if it automatically audits account creation. The configuration should look similar to the example below:
+
+archive
+ log config
+ logging enable
+
+Note: Configuration changes can be viewed using the show archive log config all command.
+
+If account creation is not automatically audited, this is a finding.
+
+Fix Text: Configure the router to log account creation using the following commands:
+
+R4(config)#archive
+R4(config-archive)#log config
+R4(config-archive-log-cfg)#logging enable
+R4(config-archive-log-cfg)#end  
+
+CCI: CCI-000018
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>archive</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>log config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging enable</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>eae104c4-58a3-4ae4-85c9-85deaa63b1c5</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000100 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to automatically audit account modification.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if it automatically audits account modification. The configuration should look similar to the example below:
+
+archive
+ log config
+ logging enable
+
+Note: Configuration changes can be viewed using the show archive log config all command.
+
+If account modification is not automatically audited, this is a finding.
+
+Fix Text: Configure the router to log account modification using the following commands:
+
+R4(config)#archive
+R4(config-archive)#log config
+R4(config-archive-log-cfg)#logging enable
+R4(config-archive-log-cfg)#end  
+
+CCI: CCI-001403
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>logging userinfo</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>log config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>6e3d083c-9bfe-45e1-8ce7-86b2fe250181</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000940 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to audit the execution of privileged functions.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement. The configuration example below will log all commands entered from the command line interface as well as log all configuration changes.
+
+hostname R1
+!
+logging userinfo
+!
+…
+…
+…
+archive
+ log config
+ logging enable
+!
+
+Note: The logging userinfo global configuration command will generate a log when a user increases his or her privilege level.
+
+If the Cisco router is not configured to log all commands entered from the command line interface as well as log all configuration changes, this is a finding.
+
+Fix Text: Configure the Cisco router to log all commands entered from the command line interface as well as log all configuration changes as shown in the following example:
+
+R1(config)#logging userinfo
+R1(config)#archive
+R1(config-archive)#log config
+R1(config-archive-log-cfg)#logging enable
+R1(config-archive-log-cfg)#end  
+
+CCI: CCI-002234
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>archive</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>log config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging enable</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>1c9568cf-456c-4a01-8fa9-89b88850d87b</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000120 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to automatically audit account removal actions.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if it automatically audits account removal. The configuration should look similar to the example below:
+
+archive
+ log config
+ logging enable
+
+Note: Configuration changes can be viewed using the show archive log config all command.
+
+If account removal is not automatically audited, this is a finding.
+
+Fix Text: Configure the router to log account removal using the following commands:
+
+R4(config)#archive
+R4(config-archive)#log config
+R4(config-archive-log-cfg)#logging enable
+R4(config-archive-log-cfg)#end  
+
+CCI: CCI-001405
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>archive</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>log config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging enable</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>65ab57d3-867f-44fd-a12c-9778ee252ed2</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001250 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to generate log records when administrator privileges are deleted.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+archive
+ log config
+ logging enable
+
+If the Cisco router is not configured to generate log records when administrator privileges are deleted, this is a finding.
+
+Fix Text: Configure the Cisco router to generate log records when administrator privileges are deleted as shown in the example below.
+
+R4(config)#archive
+R4(config-archive)#log config
+R4(config-archive-log-cfg)#logging enable
+R4(config-archive-log-cfg)#end  
+
+CCI: CCI-000172
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>logging trap notifications</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging x.x.x.x</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>2c16779f-6e82-48f9-92bc-9a7b72b72e6b</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000990 - Logging</RuleName>
+          <Comments>The Cisco router must generate an immediate alert when allocated audit record storage volume reaches 75% of repository maximum audit record storage capacity.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to send logs to a syslog server that can send alerts to the appropriate personnel.
+
+Verify that the router is configured to send logs to a syslog server. The configuration should look similar to the example below:
+
+logging trap notifications
+logging x.x.x.x
+
+Note: Default for sending log messages to the syslog server is informational (level 6); hence, the command logging trap informational will not be seen in the configuration. Level of log messages sent to the syslog server can be verified using the show logging command.
+
+If the router is not configured to send log messages to a syslog server, this is a finding.
+
+Fix Text: Configure the router to send log messages to the syslog server as shown in the example below.
+
+R4(config)#logging host x.x.x.x
+R4(config)#logging trap notifications  
+
+CCI: CCI-001855
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>logging trap notifications</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging x.x.x.x</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>a668b99d-adc9-409d-9457-9d508d6de61a</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001340 - Logging</RuleName>
+          <Comments>The Cisco router must use automated mechanisms to alert security personnel to threats identified by authoritative sources (e.g., CTOs) and in accordance with CJCSM 6510.01B.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to send logs to a syslog server that can send alerts to the appropriate personnel.
+
+Verify that the router is configured to send logs to a syslog server. The configuration should look similar to the example below:
+
+logging trap notifications
+logging x.x.x.x
+
+Note: Default for sending log messages to the syslog server is informational (level 6); hence, the command logging trap informational will not be seen in the configuration. Level of log messages sent to the syslog server can be verified using the show logging command.
+
+If the router is not configured to send log messages to a syslog server, this is a finding.
+
+Fix Text: Configure the router to send log messages to the syslog server as shown in the example below.
+
+R4(config)#logging host x.x.x.x
+R4(config)#logging trap notifications  
+
+CCI: CCI-000366
+
+
+CCI: CCI-001274
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>f3325c5a-799b-42f3-9691-a0d320bb2d83</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000440 - Logging</RuleName>
+          <Comments>The Cisco router must use cryptographic mechanisms to protect the integrity of audit information at rest.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if persistent logging is not enabled. The following is an example of persistent logging.
+
+logging persistent url flash0:/Logfile filesize 6220000
+
+If persistent logging is configured, this is a finding.
+
+Fix Text: Disable persistent logging as shown in the configuration example.
+
+no logging persistent url flash0:/Logfile  
+
+CCI: CCI-001350
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText>logging persistent url flash0:/Logfile filesize 6220000</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>logging trap notifications</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging x.x.x.x</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>dac3d7bd-a3a4-4b67-9ee5-a1f65dd79afb</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001060 - Logging</RuleName>
+          <Comments>The Cisco router must generate an alert that will then be sent to the ISSO, ISSM, and other designated personnel (deemed appropriate by the local organization) when the unauthorized installation of software is detected.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to send logs to a syslog server that can send alerts to the appropriate personnel.
+
+Verify that the router is configured to send logs to a syslog server. The configuration should look similar to the example below:
+
+logging trap notifications
+logging x.x.x.x
+
+Note: Default for sending log messages to the syslog server is informational (level 6); hence, the command logging trap informational will not be seen in the configuration. Level of log messages sent to the syslog server can be verified using the show logging command.
+
+If the router is not configured to send log messages to a syslog server, this is a finding.
+
+Fix Text: Configure the router to send log messages to the syslog server as shown in the example below.
+
+R4(config)#logging host x.x.x.x
+R4(config)#logging trap notifications  
+
+CCI: CCI-001811
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>logging userinfo</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>archive</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>9bbdf12e-fbcc-4fbf-bf5a-a3f1854e1bb6</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000210 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to protect against an individual falsely denying having performed organization-defined actions to be covered by non-repudiation.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the example below.
+
+hostname R1
+!
+logging userinfo
+!
+…
+…
+…
+archive
+ log config
+ logging enable
+!
+
+Note: The logging userinfo global configuration command will generate a log when a user increases his or her privilege level.
+
+If logging of administrator activity is not configured, this is a finding.
+
+Fix Text: Configure the router to log administrator activity as shown in the example below.
+
+R1(config)#logging userinfo
+R1(config)#archive
+R1(config-archive)#log config
+R1(config-archive-log-cfg)#logging enable
+R1(config-archive-log-cfg)#end  
+
+CCI: CCI-000166
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>archive</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>log config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging enable</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>c7a542b2-0f0f-472b-8d26-b27cc9dad698</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000880 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to automatically audit account enabling actions.
+</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if it automatically audits account enabling. The configuration should look similar to the example below:
+
+archive
+ log config
+ logging enable
+
+Note: Configuration changes can be viewed using the show archive log config all command.
+
+If account enabling is not automatically audited, this is a finding.
+
+Fix Text: Configure the router to log account enabling using the following commands:
+
+R4(config)#archive
+R4(config-archive)#log config
+R4(config-archive-log-cfg)#logging enable
+R4(config-archive-log-cfg)#end  
+
+CCI: CCI-002130
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>28f11b31-e5dd-4774-ab40-b956bc65714b</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001290 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to generate log records when concurrent logons from different workstations occur.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the examples below.
+
+login on-success log
+
+If the Cisco router is not configured to generate log records when concurrent logons from different workstations occur, this is a finding.
+
+Fix Text: Configure the Cisco router to generate log records when concurrent logons from different workstations occur as shown in the example below.
+
+R5(config)#login on-success log  
+
+CCI: CCI-000172
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>login on-success log</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>archive</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>log config</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>logging enable</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>da77d10f-318b-4da2-b5ad-d994234f63c4</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000110 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to automatically audit account disabling actions.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the router configuration to determine if it automatically audits account disabling. The configuration should look similar to the example below:
+
+archive
+ log config
+ logging enable
+
+Note: Configuration changes can be viewed using the show archive log config all command.
+
+If account disabling is not automatically audited, this is a finding.
+
+Fix Text: Configure the router to log account disabling using the following commands:
+
+R4(config)#archive
+R4(config-archive)#log config
+R4(config-archive-log-cfg)#logging enable
+R4(config-archive-log-cfg)#end  
+
+CCI: CCI-001404
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>login on-failure log</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>login on-success log</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>0699ed74-c049-4098-aefc-d9ecb9a8b008</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001260 - Logging</RuleName>
+          <Comments>The Cisco router must be configured to generate audit records when successful/unsuccessful logon attempts occur.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement as shown in the examples below.
+
+login on-failure log
+login on-success log
+
+If the Cisco router is not configured to generate audit records when successful/unsuccessful logon attempts occur, this is a finding.
+
+Fix Text: Configure the Cisco router to generate audit records when successful/unsuccessful logon attempts occur as shown in the example below.
+
+R5(config)#login on-failure log
+R5(config)#login on-success log  
+
+CCI: CCI-000172
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+      </AssignedPolicyRules>
+      <Grouping>CSCO-IOS-NDM</Grouping>
+      <Comments />
+      <PolicyName>CSCO-IOS-NDM - Logging</PolicyName>
+    </Policy>
+  </AssignedPolicies>
+  <ReportStatus>Enabled</ReportStatus>
+</PolicyReport>

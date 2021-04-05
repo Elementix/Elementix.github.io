@@ -1,0 +1,122 @@
+!#################################################
+!############ SNMP v3 Credentials  ###############
+!#################################################
+config t
+snmp-server group V3Group v3 priv read V3View
+snmp-server view V3View internet included
+snmp-server view V3View iso included
+snmp-server user Orion V3Group v3 auth sha nisgaa priv aes 128 solarwinds
+
+end
+wr mem
+
+!#################################################
+!############ Services  ##########################
+!#################################################
+config t
+no boot network
+no ip boot server
+no ip bootp server
+no ip identd
+no ip finger
+no ip http server
+no ip rcmd rcp-enable
+no ip rcmd rsh-enable
+no service config
+no service finger
+no service tcp-small-servers
+no service udp-small-servers
+no ip gratuitous-arps
+no ip source-route
+end 
+wr mem
+
+!#################################################
+!############ Logging  ###########################
+!#################################################
+logging userinfo
+login on-failure log
+login on-success log
+logging trap notifications
+logging 10.50.2.1
+
+archive
+ log config
+ logging enable
+end
+wr mem
+
+
+
+!#################################################
+!############ SSH Configuration ##################
+!#################################################
+ip domain name nmsnil.local
+ip ssh version 2
+ip ssh authentication-retries 2
+crypto key generate
+  yes
+  1048
+  yes
+
+
+!#################################################
+!############ Banner #############################
+!#################################################
+config t
+no banner motd
+no banner exec
+banner login ^
+
+You are accessing a U.S. Government (USG) Information System (IS) that is 
+provided for USG-authorized use only.
+
+By using this IS (which includes any device attached to this IS), you 
+consent to the following conditions:
+
+-The USG routinely intercepts and monitors communications on this IS for 
+purposes including, but not limited to, penetration testing, COMSEC 
+monitoring, network operations and defense, personnel misconduct (PM), 
+law enforcement (LE), and counterintelligence (CI) investigations.
+
+-At any time, the USG may inspect and seize data stored on this IS.
+
+-Communications using, or data stored on, this IS are not private, are 
+subject to routine monitoring, interception, and search, and may be 
+disclosed or used for any USG-authorized purpose.
+
+-This IS includes security measures (e.g., authentication and access 
+controls) to protect USG interests--not for your personal benefit or 
+privacy.
+
+-Notwithstanding the above, using this IS does not constitute consent 
+to PM, LE or CI investigative searching or monitoring of the content 
+of privileged communications, or work product, related to personal 
+representation or services by attorneys, psychotherapists, or clergy, 
+and their assistants. Such communications and work product are private 
+and confidential. See User Agreement for details.
+!!
+!!
+!!..Banner Version 2020-1030
+!!
+!!
+^
+
+
+!#################################################
+!############ NTP  ###############################
+!#################################################
+config t
+
+service timestamps log datetime localtime
+ntp authentication-key 1 md5 Myfirstkey
+ntp authentication-key 2 md5 My2ndkey
+ntp authenticate
+ntp trusted-key 1
+ntp trusted-key 2
+ntp server 10.50.2.100 key 1
+ntp server 10.50.2.200 key 2
+clock timezone EST -5
+
+
+

@@ -1,0 +1,2328 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PolicyReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ID>f5d9cc9b-6b55-4d83-a0f4-05c00f4723ff</ID>
+  <Name>CSCO-IOS-NDM - User Access</Name>
+  <Comments>Cisco IOS Router NDM Security Technical Implementation Guide: Version: 1: Release: 2:  24 Jan 2020</Comments>
+  <Group>Cisco-IOS-NDM-V1R1</Group>
+  <ShowSummaryFlag>false</ShowSummaryFlag>
+  <ShowRulesWithoutViolationFlag>true</ShowRulesWithoutViolationFlag>
+  <AssignedPolicies>
+    <Policy>
+      <NodeSelectionString>WebCriteria:&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfWebSelectionCriteria xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;WebSelectionCriteria&gt;
+    &lt;Id&gt;bb732a3a-9cf5-4bba-b799-7a66639a1cb1&lt;/Id&gt;
+    &lt;LogicalCondition /&gt;
+    &lt;SelectedColumn&gt;Vendor&lt;/SelectedColumn&gt;
+    &lt;MatchType&gt;=&lt;/MatchType&gt;
+    &lt;SelectedValue&gt;Cisco&lt;/SelectedValue&gt;
+  &lt;/WebSelectionCriteria&gt;
+&lt;/ArrayOfWebSelectionCriteria&gt;SQL:Where (Vendor = 'Cisco') </NodeSelectionString>
+      <ConfigTypes>Running</ConfigTypes>
+      <AssignedPolicyRules>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>login authentication LOGIN_AUTHENTICATION</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>0936762e-8fe8-446e-931c-0320338a215a</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001380 - User Access</RuleName>
+          <Comments>The Cisco router must employ automated mechanisms to centrally apply authentication settings.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000366
+
+
+CCI: CCI-000371
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>b78c4a9b-a9e0-4dd9-aa25-11bc8af91314</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000960 - User Access</RuleName>
+          <Comments>The Cisco router must notify the administrator, upon successful logon (access), of the location of last logon (terminal or IP address) in addition to the date and time of the last logon (access).</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000366
+
+
+CCI: CCI-002250
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>ff913e8c-fa88-4b1e-8cf5-1ba53e86f7ce</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001280 - User Access</RuleName>
+          <Comments>The Cisco router must generate audit records showing starting and ending time for administrator access to the system.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000172
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>access-class MANAGEMENT_NET in</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>transport input ssh</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>618da271-d637-4cd7-915c-32497b812d2d</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000140 - User Access</RuleName>
+          <Comments>The Cisco router must be configured to enforce approved authorizations for controlling the flow of management information within the device based on control policies.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that it is compliant with this requirement. 
+
+Step 1: Verify that the line vty has an ACL inbound applied as shown in the example below.
+
+line vty 0 4
+ access-class MANAGEMENT_NET in
+ transport input ssh
+
+Step 2: Verify that the ACL permits only hosts from the management network to access the router.
+
+ip access-list standard MANAGEMENT_NET
+ permit x.x.x.0 0.0.0.255
+
+If the Cisco router is not configured to enforce approved authorizations for controlling the flow of management information within the device based on control policies, this is a finding.
+
+Fix Text: Configure the Cisco router to restrict management access to specific IP addresses via SSH as shown in the example below.
+
+R2(config)#ip access-list standard MANAGEMENT_NET
+R2(config-std-nacl)#permit x.x.x.0 0.0.0.255
+R2(config-std-nacl)#exit
+R2(config)#line vty 0 4
+R2(config-line)#transport input ssh
+R2(config-line)#access-class MANAGEMENT_NET in
+R2(config-line)#end  
+
+CCI: CCI-001368
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart>line vty (0 4|5 15)</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Regex</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip http max-connections 2</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>session-limit 2 </Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>7480dcd9-d487-4d63-a98c-3e65309a0582</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000010 - User Access</RuleName>
+          <Comments>The Cisco router must be configured to limit the number of concurrent management sessions to an organization-defined number.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Note: This requirement is not applicable to file transfer actions such as FTP, SCP and SFTP.
+
+Review the router configuration to determine if concurrent management sessions are limited as show in the example below:
+
+ip http secure-server
+ip http max-connections 2
+…
+…
+…
+line vty 0 4
+ session-limit 2
+ transport input ssh
+
+If the router is not configured to limit the number of concurrent management sessions, this is a finding.
+
+Fix Text: Configure the router to limit the number of concurrent management sessions to an organization-defined number as shown in the example below.
+
+ip http max-connections 2
+line vty 0 4
+ session-limit 2  
+
+CCI: CCI-000054
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>radius host 10.1.48.2 key xxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>login authentication LOGIN_AUTHENTICATION</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>50c591ae-fb91-4b7a-b2f1-3f33d5a6a35d</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000080 - User Access</RuleName>
+          <Comments>The Cisco router must automatically disable accounts after a 35-day period of account inactivity.
+</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000017
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>radius host 10.1.48.2 key xxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>6507792f-9d86-4034-9759-4bf472885599</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000190 - User Access</RuleName>
+          <Comments>Upon successful logon, the Cisco router must notify the administrator of the number of unsuccessful logon attempts since the last successful logon.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000053
+
+
+CCI: CCI-000366
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern>radius host 10.1.48.2 key xxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>ebceb1ee-0265-45a8-a008-4cf5b3d3d23b</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000200 - User Access</RuleName>
+          <Comments>The Cisco router must notify the administrator of changes to access and/or privilege parameters of the administrators account that occurred since the last logon.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000366
+
+
+CCI: CCI-001395
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>b422b647-7cf2-4da3-bc81-50cae211dc2f</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000820 - User Access</RuleName>
+          <Comments>The Cisco router must generate alerts that can be forwarded to the administrators and ISSO when accounts are disabled.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-001685
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>ip http authentication aaa login-authentication LOGIN_AUTHENTICATION</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>6e2cebab-9c35-411d-8735-5d06a13ac242</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000560 - User Access</RuleName>
+          <Comments>The Cisco router must prohibit password reuse for a minimum of five generations.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000200
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>0</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>18781ba3-f83c-4cc7-94d0-6367b11a84d3</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000640 - User Access</RuleName>
+          <Comments>The Cisco router must enforce 24 hours as the minimum password lifetime</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000198
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>aaa authentication login LOGIN_AUTHENTICATION group radius local</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>3496caa7-6a08-4014-aded-637118b7306f</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001120 - User Access</RuleName>
+          <Comments>The Cisco router must electronically verify Personal Identity Verification (PIV) credentials.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-001954
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>radius host 10.1.48.2 key xxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>518ee82e-3c6e-4678-881b-75f97b567a42</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000540 - User Access</RuleName>
+          <Comments>The Cisco router must disable identifiers (individuals, groups, roles, and devices) after 35 days of inactivity.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000795
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>70ec9e71-27a2-44a1-b125-8762373d91d3</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001370 - User Access</RuleName>
+          <Comments>The Cisco router must be configured to use an authentication server for the purpose of authenticating users prior to granting administrative access.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+Review the Cisco router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the Cisco router is not configured to use an authentication server for the purpose of authenticating users prior to granting administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000366
+
+
+CCI: CCI-000370
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>2</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>9229704c-f2a6-4a72-b898-9c3623f8aefc</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001160 - User Access</RuleName>
+          <Comments>The Cisco router must dynamically manage identifiers.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000366
+
+
+CCI: CCI-001976
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>ip http authentication aaa login-authentication LOGIN_AUTHENTICATION</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>cb59fde9-99e2-464e-bdca-a8d713da80a7</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001390 - User Access</RuleName>
+          <Comments>The Cisco router must employ automated mechanisms to centrally verify authentication settings.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000366
+
+
+CCI: CCI-000372
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>radius host 10.1.48.2 key xxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>7bd7684a-9804-4c18-b05d-a8da0befef89</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000180 - User Access</RuleName>
+          <Comments>Upon successful logon, the Cisco router must notify the administrator of the date and time of the last logon.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000052
+
+
+CCI: CCI-000366
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>login authentication LOGIN_AUTHENTICATION</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>exec-timeout 10 0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>78b64246-6f89-4e5e-8f36-a95dda033622</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000800 - User Access</RuleName>
+          <Comments>The Cisco router must generate alerts that can be forwarded to the administrators and ISSO when accounts are created.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-001683
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart>line con 0</ConfigBlockStart>
+          <ConfigBlockEnd>!</ConfigBlockEnd>
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>radius host 10.1.48.2 key xxxxxx
+</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>708dfbab-add4-4a14-bb8f-acda0a1a6d1c</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000480 - User Access</RuleName>
+          <Comments>The Cisco router must uniquely identify and authenticate organizational administrators (or processes acting on behalf of organizational administrators).</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000764
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>2</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>05612790-0947-486b-bfc8-bb9f2e575953</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001330 - User Access</RuleName>
+          <Comments>The Cisco router must notify the administrator of the number of successful logon attempts occurring during an organization-defined time period.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000366
+
+
+CCI: CCI-001391
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>aaa authentication login LOGIN_AUTHENTICATION group radius local</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>6f2680f7-f484-4066-af0d-bea47e091e17</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000500 - User Access</RuleName>
+          <Comments>The Cisco router must use multifactor authentication for network access to privileged accounts.
+</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000765
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>ip http authentication aaa login-authentication LOGIN_AUTHENTICATION</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>b4e4a098-ac57-4b7d-bafc-c0316e87722c</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000830 - User Access</RuleName>
+          <Comments>The Cisco router must generate alerts that can be forwarded to the administrators and ISSO when accounts are removed.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-001686
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>2cd42198-48fa-43b1-8d7c-cc2c895ef3af</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000510 - User Access</RuleName>
+          <Comments>The Cisco router must use multifactor authentication for local access to privileged accounts.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000767
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>f92e7887-c291-44d8-ac4f-d140844d289a</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001170 - User Access</RuleName>
+          <Comments>The Cisco router must allow the use of a temporary password for system logons with an immediate change to a permanent password.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-002041
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>radius host 10.1.48.2 key xxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>aaa authentication login LOGIN_AUTHENTICATION group radius local</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>a951a0fc-73bf-4fdd-aaa7-eb179047164f</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000070 - User Access</RuleName>
+          <Comments>The Cisco router must automatically remove or disable temporary user accounts after 72 hours.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-000016
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Regex</PatternType>
+              <Condition />
+              <Pattern />
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>9061e08c-c497-4fa2-8ed4-f13360750034</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-001110 - User Access</RuleName>
+          <Comments>The Cisco router must accept Personal Identity Verification (PIV) credentials</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-001953
+_____________________________________________________________</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>false</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</SimplePatternText>
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+        <PolicyRule>
+          <MultiLineRulePatterns>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition />
+              <Pattern>radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+            <MultiLineRulePattern>
+              <EndBracket />
+              <PatternType>Like</PatternType>
+              <Condition>AND</Condition>
+              <Pattern>exec-timeout 10 0</Pattern>
+              <Criteria>true</Criteria>
+              <BeginBracket />
+            </MultiLineRulePattern>
+          </MultiLineRulePatterns>
+          <RuleId>2daa5cca-bbe3-4cbb-9277-f80d1ed6f653</RuleId>
+          <RuleName>CSCO-IOS-NDM-CISC-ND-000890 - User Access</RuleName>
+          <Comments>The Cisco router must notify SAs and ISSMs when accounts are created or enabled when previously disabled.</Comments>
+          <Grouping>CSCO-IOS-NDM</Grouping>
+          <RemediateScript>Check Content:  
+The Cisco router is not compliant with this requirement. However, the risk associated with this requirement can be fully mitigated if the router is configured to utilize an authentication server to authenticate and authorize users for administrative access.
+
+Review the router configuration to verify that the device is configured to use an authentication server as primary source for authentication as shown in the following example:
+
+aaa new-model
+!
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+…
+…
+…
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+…
+…
+…
+radius-server host x.x.x.x auth-port 1645 acct-port 1646 key xxxxxxx
+…
+…
+…
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+line vty 0 4
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+
+If the router is not configured to use an authentication server to authenticate and authorize users for administrative access, this is a finding.
+
+Fix Text: Step 1: Configure the Cisco router to use an authentication server as shown in the following example:
+
+R4(config)#radius host 10.1.48.2 key xxxxxx
+
+Step 2: Configure the authentication order to use the authentication server as primary source for authentication as shown in the following example:
+
+R4(config)#aaa authentication login LOGIN_AUTHENTICATION group radius local
+
+Step 3: Configure all network connections associated with a device management to use an authentication server for the purpose of login authentication.
+
+R4(config)#line vty 0 4
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit
+R4(config)#line con 0
+R4(config-line)#login authentication LOGIN_AUTHENTICATION
+R4(config-line)#exit 
+R4(config)#ip http authentication aaa login-authentication LOGIN_AUTHENTICATION  
+
+CCI: CCI-002132
+_____________________________________________________________
+</RemediateScript>
+          <ConfigBlockStart />
+          <ConfigBlockEnd />
+          <ConfigBlockPatternType>Like</ConfigBlockPatternType>
+          <ConfigBlockMustExist>false</ConfigBlockMustExist>
+          <PatternType>Like</PatternType>
+          <PatternMustExist>true</PatternMustExist>
+          <AdvancedMode>true</AdvancedMode>
+          <ErrorLevel>1</ErrorLevel>
+          <SimplePatternText />
+          <ExecuteScriptAutomatically>false</ExecuteScriptAutomatically>
+          <Owner>admin</Owner>
+          <RemediateScriptType>CLI</RemediateScriptType>
+          <ExecuteRemediationScriptPerBlock>false</ExecuteRemediationScriptPerBlock>
+          <ExecuteScriptInConfigMode>false</ExecuteScriptInConfigMode>
+        </PolicyRule>
+      </AssignedPolicyRules>
+      <Grouping>CSCO-IOS-NDM</Grouping>
+      <Comments />
+      <PolicyName>CSCO-IOS-NDM - User Access</PolicyName>
+    </Policy>
+  </AssignedPolicies>
+  <ReportStatus>Enabled</ReportStatus>
+</PolicyReport>
